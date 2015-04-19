@@ -1,0 +1,10 @@
+{{define "Type"}}
+    type {{ .Kind }} struct {
+        {{range $key, $val := .Traits}}
+        E{{$val.Name}} {{goTypeFor $val.Type}} `json:"{{$val.Name}}"`
+        {{end}}
+
+        {{range $key, $val := .Relationships}}
+        {{end}}
+    }
+{{end}}
