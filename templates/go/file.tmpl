@@ -4,4 +4,31 @@
     import ()
 
     {{template "Type" .Model}}
+
+    {{template "Accessors" .Model}}
+{{end}}
+
+{{define "Type"}}
+    type {{ .Kind }} struct {
+        {{range $name, $trait := .Traits}}
+        {{attr $trait.Name}} {{goTypeFor $trait.Type}} `json:"{{$trait.Name}}"`
+        {{end}}
+
+        {{range $key, $val := .Relationships}}
+        {{end}}
+    }
+{{end}}
+
+{{define "Accessors"}}
+{{with $model := .}}
+{{range $name, $trait := .Traits}}
+func (f *{{$model.Kind}}) {{$name}}() {{goTypeFor $trait.Type}} {
+    return f.{{attr $trait.Name}}
+}
+
+func (f *{{$model.Kind}}) Set{{$name}}(v {{goTypeFor $trait.Type}}) {
+    f.{{attr $trait.Name}} = v
+}
+{{end}}
+{{end}}
 {{end}}
