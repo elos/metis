@@ -1,0 +1,25 @@
+{{define "File"}}
+    package {{.Model.Kind}}
+
+    import ()
+
+    {{template "Type" .Model}}
+
+    {{template "Accessors" .Model}}
+{{end}}
+
+{{define "Type"}}
+    type {{ .Kind }} struct {
+        {{range $name, $trait := .Traits}}
+        {{attr $trait.Name}} {{goTypeFor $trait.Type}} `json:"{{$name}}" bson:"{{$name}}{{if isID $trait}},omitempty{{end}}"`
+        {{end}}
+
+        {{range $name, $relationship := .Relationships}}
+            {{if isMul $relationship}}
+                {{attr $name}}IDs mongo.IDSet `json:"{{$name}}_ids" bson:"{{$name}}_ids"`
+            {{else}}
+                E{{attr $name}}ID bson.ObjectId `json:"{{$name}}_id" bson:"{{$name}}_id,omitempty"`
+            {{end}}
+        {{end}}
+    }
+{{end}}
