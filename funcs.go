@@ -37,7 +37,7 @@ func AppendStrings(v ...string) {
 }
 
 func IsMul(r Link) bool {
-	return r.Kind == Mul
+	return r.Multiplicity == Mul
 }
 
 func IsID(t Trait) bool {

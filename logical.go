@@ -1,28 +1,38 @@
 package metis
 
 type (
-	Primitive int
-
-	Multiplicity int
-
 	Trait struct {
 		Name string
 		Type Primitive
 	}
 
 	Link struct {
-		Name, Other string
-		Kind        Multiplicity
+		Name         string
+		Multiplicity Multiplicity
+		Codomain     string
+		Inverse      string
 	}
 
 	Model struct {
-		Kind, Plural, Version string
-
-		Traits map[string]Trait
-		Links  map[string]Link
+		Kind    string
+		Space   string
+		Domains []string
+		Traits  map[string]*Trait
+		Links   map[string]*Link
 	}
 
-	Producer interface {
+	Schema struct {
+		Version string
+		Spaces  []string
+		Domains []string
+		Models  map[string]Model
+	}
+)
+
+type (
+	Primitive    int
+	Multiplicity int
+	Producer     interface {
 		WriteFile(string)
 	}
 )
