@@ -23,9 +23,9 @@ type (
 
 	Schema struct {
 		Version string
-		Spaces  []string
-		Domains []string
-		Models  map[string]Model
+		Spaces  map[string]bool
+		Domains map[string]bool
+		Models  map[string]*Model
 	}
 )
 

@@ -13,7 +13,7 @@ var (
 	Path       = templates.PackagePath(ImportPath)
 )
 
-func ParseModelFile(filepath string) Model {
+func ParseModelFile(filepath string) *Model {
 	input, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		log.Fatal(err)
@@ -25,6 +25,8 @@ func ParseModelFile(filepath string) Model {
 		log.Fatal(err)
 	}
 
-	model := md.Model()
-	return *model
+	if err := md.Valid(); err != nil {
+		panic(err)
+	}
+	return md.Model()
 }

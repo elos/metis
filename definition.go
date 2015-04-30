@@ -127,14 +127,24 @@ func (md *ModelDef) Valid() error {
 		}
 	}
 
-	for i := range md.Traits {
-		if err := md.Traits[i].Valid(); err != nil {
+	seenNames := make(map[string]bool)
+
+	for _, t := range md.Traits {
+		if _, seen := seenNames[t.Name]; seen {
+			return fmt.Errorf("Model name clash %s", t.Name)
+		}
+
+		if err := t.Valid(); err != nil {
 			return err
 		}
 	}
 
-	for i := range md.Links {
-		if err := md.Links[i].Valid(); err != nil {
+	for _, l := range md.Links {
+		if _, seen := seenNames[l.Name]; seen {
+			return fmt.Errorf("Model name clash %s", l.Name)
+		}
+
+		if err := l.Valid(); err != nil {
 			return err
 		}
 	}
