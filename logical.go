@@ -50,6 +50,9 @@ const (
 	DateTimeList
 
 	ID
+	IDList
+
+	StringIDMap
 )
 
 // Primitive Multiplicities

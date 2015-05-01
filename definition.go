@@ -93,7 +93,7 @@ func (ld *LinkDef) Valid() error {
 	}
 
 	if ld.Codomain == "" {
-		return errors.New("Link definition must ahve codomain")
+		return errors.New("Link definition must have codomain")
 	}
 
 	return nil
@@ -118,12 +118,12 @@ func (md *ModelDef) Valid() error {
 	}
 
 	if md.Space == "" {
-		return errors.New("Model definition must have a space")
+		return fmt.Errorf("Model definition for %s must have a space", md.Kind)
 	}
 
 	for i := range md.Domains {
 		if md.Domains[i] == "" {
-			return errors.New("Model definition domain \"\" is invalid")
+			return fmt.Errorf("Model definition for %s has no domain", md.Kind)
 		}
 	}
 
@@ -131,21 +131,21 @@ func (md *ModelDef) Valid() error {
 
 	for _, t := range md.Traits {
 		if _, seen := seenNames[t.Name]; seen {
-			return fmt.Errorf("Model name clash %s", t.Name)
+			return fmt.Errorf("Model %s has name clash %s", md.Kind, t.Name)
 		}
 
 		if err := t.Valid(); err != nil {
-			return err
+			return fmt.Errorf("Model %s has trait error: %s", md.Kind, err.Error())
 		}
 	}
 
 	for _, l := range md.Links {
 		if _, seen := seenNames[l.Name]; seen {
-			return fmt.Errorf("Model name clash %s", l.Name)
+			return fmt.Errorf("Model %s name clash %s", md.Kind, l.Name)
 		}
 
 		if err := l.Valid(); err != nil {
-			return err
+			return fmt.Errorf("Model %s has link error: %s", md.Kind, err.Error())
 		}
 	}
 
