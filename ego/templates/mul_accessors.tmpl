@@ -25,14 +25,14 @@
 {{end}}
 
 {{define "Iter"}}
-{{sig .Model}} {{name .This.Link.Name}}Iter(store d.Store) (d.ModelIterator, error) {
+{{sig .Model}} {{name .This.Link.Name}}Iter(store data.Store) (data.ModelIterator, error) {
     // not yet completely general
     return mongo.NewIDIter(mongo.NewIDSetFromStrings({{camel .Model.Kind}}.{{linkFieldName .This.Link}}), store), nil
 }
 {{end}}
 
 {{define "List"}}
-{{sig .Model}} {{name .This.Link.Name}}(store d.Store) ([]{{.Other.Type}}, error) {
+{{sig .Model}} {{name .This.Link.Name}}(store data.Store) ([]{{.Other.Type}}, error) {
 
     {{.This.Link.Name}} := make([]{{.Other.Type}}, 0)
     iter := mongo.NewIDIter(mongo.NewIDSetFromStrings({{camel .Model.Kind}}.{{linkFieldName .This.Link}}), store)

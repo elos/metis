@@ -1,7 +1,7 @@
 {{define "ROOT"}}
-package m
+package models
 
-func ModelFor(k d.Kind) d.Model {
+func ModelFor(k data.Kind) data.Model {
     switch k {
     {{range $index, $model := .Models}}
     case {{name $model.Kind}}Kind:

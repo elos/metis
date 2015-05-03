@@ -2,7 +2,7 @@
     package models
     const (
     {{range $key, $model := .Models }}
-        {{name $model.Kind}}Kind d.Kind = "{{$model.Kind}}"
+        {{name $model.Kind}}Kind data.Kind = "{{$model.Kind}}"
     {{end}}
     )
 {{end}}

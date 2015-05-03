@@ -7,7 +7,7 @@ import (
 	"log"
 	"path/filepath"
 
-	"github.com/elos/ehttp/templates"
+	"github.com/elos/gen/metis/templates"
 )
 
 var (
