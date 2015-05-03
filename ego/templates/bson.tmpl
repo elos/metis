@@ -1,0 +1,86 @@
+{{define "BSON"}}
+{{sig .Model}} GetBSON() (interface{}, error) {
+    {{with $model := .Model}}
+    return struct {
+        {{range $key, $trait := $model.Traits}}
+            {{traitFieldName $trait}} {{typeFor $trait.Type}} {{traitFieldTags $trait}}
+        {{end}}
+        {{range $key, $link := $model.Links}}
+            {{linkFieldName $link}} {{linkFieldType $link}} {{linkFieldTags $link}}
+            {{if isVirtual $model $link}}
+                {{virtualLinkExtraFields $link}}
+            {{end}}
+        {{end}}
+    }{
+        {{range $key, $trait := $model.Traits}}
+            {{if isID $trait}}
+            {{else}}
+            {{traitFieldName $trait}}: {{this $model}}.{{traitFieldName $trait}},
+            {{end}}
+        {{end}}
+        {{range $key, $link := $model.Links}}
+            {{linkFieldName $link}}: {{this $model}}.{{linkFieldName $link}},
+            {{if isVirtual $model $link}}
+            {{name $link.Name}}Kind: {{this $model}}.{{name $link.Name}}Kind,
+            {{end}}
+        {{end}}
+    }, nil
+    {{end}}
+}
+
+{{sig .Model}} SetBSON(raw bson.Raw) (error) {
+    {{with $model := .Model}}
+    tmp :=  struct {
+        {{range $key, $trait := $model.Traits}}
+            {{if isID $trait}}
+                {{traitFieldName $trait}} bson.ObjectId {{traitFieldTags $trait}}
+            {{else}}
+            {{traitFieldName $trait}} {{typeFor $trait.Type}} {{traitFieldTags $trait}}
+            {{end}}
+        {{end}}
+        {{range $key, $link := $model.Links}}
+            {{linkFieldName $link}} {{linkFieldType $link}} {{linkFieldTags $link}}
+            {{if isVirtual $model $link}}
+                {{virtualLinkExtraFields $link}}
+            {{end}}
+        {{end}}
+    }{}
+
+    err := raw.Unmarshal(&tmp)
+    if err != nil { return err }
+
+    {{range $key, $trait := $model.Traits}}
+        {{if isID $trait}}
+            {{this $model}}.{{traitFieldName $trait}} = tmp.{{traitFieldName $trait}}.Hex()
+        {{else}}
+            {{this $model}}.{{traitFieldName $trait}} = tmp.{{traitFieldName $trait}}
+        {{end}}
+    {{end}}
+    {{range $key, $link := $model.Links}}
+        {{this $model}}.{{linkFieldName $link}} = tmp.{{linkFieldName $link}}
+        {{if isVirtual $model $link}}
+        {{this $model}}.{{name $link.Name}}Kind = tmp.{{name $link.Name}}Kind
+        {{end}}
+    {{end}}
+    return nil
+    {{end}}
+}
+
+{{end}}
+
+{{define "oldBSON"}}
+{{sig .Model}} GetBSON() (interface{}, error) {
+    pid, err := mongo.ParseObjectID({{camel .Model.Kind}}.Id)
+    if err != nil {
+        return nil, err
+    }
+
+    return struct{
+        id bson.ObjectId `bson:"_id,omitempty"`
+        *{{name .Model.Kind}} `bson:",inline"`
+    }{
+        {{name .Model.Kind}}: {{camel .Model.Kind}},
+        id: pid,
+    }, nil
+}
+{{end}}

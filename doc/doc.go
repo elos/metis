@@ -2,6 +2,7 @@ package doc
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -11,6 +12,33 @@ import (
 	"github.com/elos/gen/metis"
 )
 
+func attributesTable(m *metis.Model) string {
+	var buf bytes.Buffer
+	for _, t := range m.Traits {
+		n := strings.Title(metis.CamelCase(t.Name))
+		fmt.Fprintf(&buf, "| %s | %s | %s |\n", n, t.Name, metis.InvPrimitiveLiterals[t.Type])
+	}
+
+	for _, l := range m.Links {
+		n := strings.Title(metis.CamelCase(l.Name))
+		json := l.Name + "_id"
+		t := "id"
+
+		if metis.IsMul(l) {
+			n += "s"
+			json += "s"
+			t = "[]" + t
+		}
+
+		fmt.Fprintf(&buf, "| %s | %s | %s |\n", n, json, t)
+	}
+
+	return string(buf.Bytes())
+}
+
+func rowTrait(t *metis.Trait) {
+}
+
 var (
 	importPath                = filepath.Join(metis.ImportPath, "doc")
 	dirPath                   = templates.PackagePath(importPath)
@@ -18,9 +46,10 @@ var (
 	engine                    = templates.NewEngine(dirPath, &templates.TemplateSet{
 		DocFile: []string{filepath.Join("doc.tmpl")},
 	}).WithFuncMap(template.FuncMap{
-		"export": strings.Title,
-		"camel":  metis.CamelCase,
-		"isMul":  metis.IsMul,
+		"export":          strings.Title,
+		"camel":           metis.CamelCase,
+		"isMul":           metis.IsMul,
+		"attributesTable": attributesTable,
 	})
 )
 

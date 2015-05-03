@@ -9,6 +9,7 @@ type (
 	Link struct {
 		Name         string
 		Multiplicity Multiplicity
+		Singular     string
 		Codomain     string
 		Inverse      string
 	}
@@ -19,11 +20,12 @@ type (
 		Domains []string
 		Traits  map[string]*Trait
 		Links   map[string]*Link
+		*Schema
 	}
 
 	Schema struct {
 		Version string
-		Spaces  map[string]bool
+		Spaces  map[string]string
 		Domains map[string]bool
 		Models  map[string]*Model
 	}

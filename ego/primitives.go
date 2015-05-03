@@ -15,4 +15,6 @@ var PrimitiveTypes = map[m.Primitive]string{
 	m.StringList:   "[]string",
 	m.DateTimeList: "[]*time.Time",
 	m.ID:           "string",
+	m.IDList:       "[]string",
+	m.StringIDMap:  "map[string]string",
 }

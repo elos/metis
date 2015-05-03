@@ -1,0 +1,46 @@
+{{define "MulAccessors"}}
+{{template "Include" $}}
+{{template "Exclude" $}}
+{{template "Iter" $}}
+{{template "List" $}}
+{{end}}
+
+{{define "Include"}}
+{{sig .Model}} Include{{name .This.Link.Singular}}({{camel .This.Link.Singular}} {{.Other.Type}}) {
+    {{camel .Model.Kind}}.{{linkFieldName .This.Link}} = append({{camel .Model.Kind}}.{{linkFieldName .This.Link}}, {{camel .This.Link.Singular}}.ID().String())
+}
+{{end}}
+
+{{define "Exclude"}}
+{{sig .Model}} Exclude{{name .This.Link.Singular}}({{camel .This.Link.Singular}} {{.Other.Type}}) {
+    tmp := make([]string, 0)
+    id := {{camel .This.Link.Singular}}.ID().String()
+    for _, s := range {{camel .Model.Kind}}.{{linkFieldName .This.Link}} {
+        if s != id {
+            tmp = append(tmp, s)
+        }
+    }
+    {{camel .Model.Kind}}.{{linkFieldName .This.Link}} = tmp
+}
+{{end}}
+
+{{define "Iter"}}
+{{sig .Model}} {{name .This.Link.Name}}Iter(store d.Store) (d.ModelIterator, error) {
+    // not yet completely general
+    return mongo.NewIDIter(mongo.NewIDSetFromStrings({{camel .Model.Kind}}.{{linkFieldName .This.Link}}), store), nil
+}
+{{end}}
+
+{{define "List"}}
+{{sig .Model}} {{name .This.Link.Name}}(store d.Store) ([]{{.Other.Type}}, error) {
+
+    {{.This.Link.Name}} := make([]{{.Other.Type}}, 0)
+    iter := mongo.NewIDIter(mongo.NewIDSetFromStrings({{camel .Model.Kind}}.{{linkFieldName .This.Link}}), store)
+    {{.This.Link.Singular}} := New{{name .Other.Kind}}()
+    for iter.Next({{.This.Link.Singular}}) {
+        {{.This.Link.Name}} = append({{.This.Link.Name}}, {{.This.Link.Singular}})
+        {{.This.Link.Singular}} = New{{name .Other.Kind}}()
+    }
+    return {{.This.Link.Name}}, nil
+}
+{{end}}

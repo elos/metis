@@ -1,0 +1,14 @@
+{{define "ROOT"}}
+package m
+
+func ModelFor(k d.Kind) d.Model {
+    switch k {
+    {{range $index, $model := .Models}}
+    case {{name $model.Kind}}Kind:
+        return New{{name $model.Kind}}();
+    {{end}}
+    default:
+        panic(fmt.Sprintf("uknown kind: %s", k))
+    }
+}
+{{end}}

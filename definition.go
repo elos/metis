@@ -23,6 +23,7 @@ type (
 	LinkDef struct {
 		Name         string `json:"name"`
 		Multiplicity string `json:"multiplicity"`
+		Singular     string `json:"singular"`
 		Codomain     string `json:"codomain"`
 		Inverse      string `json:"inverse"`
 	}
@@ -96,6 +97,12 @@ func (ld *LinkDef) Valid() error {
 		return errors.New("Link definition must have codomain")
 	}
 
+	if multiplicityLiterals[ld.Multiplicity] == Mul {
+		if ld.Singular == "" {
+			return errors.New("Mul link defintion must specify singular form")
+		}
+	}
+
 	return nil
 }
 
@@ -103,6 +110,7 @@ func (ld *LinkDef) Link() *Link {
 	return &Link{
 		Name:         ld.Name,
 		Multiplicity: multiplicityLiterals[ld.Multiplicity],
+		Singular:     ld.Singular,
 		Codomain:     ld.Codomain,
 		Inverse:      ld.Inverse,
 	}

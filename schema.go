@@ -2,9 +2,14 @@ package metis
 
 import "fmt"
 
+func (s *Schema) IsPhysical(space string) bool {
+	_, ok := s.Spaces[space]
+	return ok
+}
+
 func BuildSchema(models ...*Model) *Schema {
 	s := new(Schema)
-	s.Spaces = make(map[string]bool)
+	s.Spaces = make(map[string]string)
 	s.Domains = make(map[string]bool)
 	s.Models = make(map[string]*Model)
 
@@ -15,7 +20,9 @@ func BuildSchema(models ...*Model) *Schema {
 			s.Domains[m.Domains[i]] = true
 		}
 
-		s.Spaces[m.Space] = true
+		s.Spaces[m.Space] = m.Kind
+
+		m.Schema = s
 	}
 
 	return s

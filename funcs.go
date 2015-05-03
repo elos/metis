@@ -36,10 +36,10 @@ func AppendStrings(v ...string) {
 	}
 }
 
-func IsMul(r Link) bool {
+func IsMul(r *Link) bool {
 	return r.Multiplicity == Mul
 }
 
-func IsID(t Trait) bool {
+func IsID(t *Trait) bool {
 	return t.Type == ID
 }

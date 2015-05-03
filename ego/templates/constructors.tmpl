@@ -1,0 +1,10 @@
+{{define "ROOT"}}
+package models
+
+{{range $key, $model := .Models }}
+func New{{name $model.Kind}}() *{{name $model.Kind}} {
+    return &{{name $model.Kind}}{}
+}
+{{end}}
+
+{{end}}
