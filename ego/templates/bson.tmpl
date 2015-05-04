@@ -1,5 +1,5 @@
 {{define "BSON"}}
-// BSON {{{
+{{printf "// BSON {{{"}}
 {{sig .Model}} GetBSON() (interface{}, error) {
     {{with $model := .Model}}
     return struct {
@@ -66,5 +66,5 @@
     return nil
     {{end}}
 }
-// BSON }}}
+{{printf "// BSON }}}"}}
 {{end}}

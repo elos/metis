@@ -8,8 +8,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/elos/gen/metis"
-	"github.com/elos/gen/metis/templates"
+	"github.com/elos/metis"
+	"github.com/elos/metis/templates"
 )
 
 func attributesTable(m *metis.Model) string {

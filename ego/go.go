@@ -10,8 +10,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/elos/gen/metis"
-	"github.com/elos/gen/metis/templates"
+	"github.com/elos/metis"
+	"github.com/elos/metis/templates"
 )
 
 type GoModel struct {

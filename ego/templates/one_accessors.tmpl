@@ -11,7 +11,7 @@
 {{end}}
 
 {{define "Getter"}}
-{{sig .Model}} {{name .This.Link.Name}}(store data.Store) ({{.Other.Type}}, error) {
+{{sig .Model}} {{name .This.Link.Name}}(db data.DB) ({{.Other.Type}}, error) {
     if {{this .Model}}.{{linkFieldName .This.Link}} == "" {
         return nil, ErrEmptyLink
     }
@@ -20,7 +20,7 @@
         {{camel .Other.Kind}} := New{{name .Other.Kind}}()
         pid, _ := mongo.ParseObjectID({{this .Model}}.{{linkFieldName .This.Link}})
         {{camel .Other.Kind}}.SetID(data.ID(pid.Hex()))
-        return {{camel .Other.Kind}}, store.PopulateByID({{camel .Other.Kind}})
+        return {{camel .Other.Kind}}, db.PopulateByID({{camel .Other.Kind}})
     {{else}}
         m := ModelFor(data.Kind({{this .Model}}.{{name .This.Link.Name}}Kind))
         {{camel .Other.Kind}} := m.({{.Other.Type}})
@@ -28,7 +28,7 @@
         pid, _ := mongo.ParseObjectID({{this .Model}}.{{linkFieldName .This.Link}})
 
         {{camel .Other.Kind}}.SetID(data.ID(pid.Hex()))
-        return {{camel .Other.Kind}}, store.PopulateByID({{camel .Other.Kind}})
+        return {{camel .Other.Kind}}, db.PopulateByID({{camel .Other.Kind}})
     {{end}}
 }
 {{end}}

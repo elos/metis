@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/elos/gen/metis"
+	"github.com/elos/metis"
 )
 
 func TypeFor(p metis.Primitive) string {

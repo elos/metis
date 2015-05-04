@@ -7,11 +7,11 @@ import (
 	"log"
 	"path/filepath"
 
-	"github.com/elos/gen/metis/templates"
+	"github.com/elos/metis/templates"
 )
 
 var (
-	ImportPath = "github.com/elos/gen/metis"
+	ImportPath = "github.com/elos/metis"
 	Path       = templates.PackagePath(ImportPath)
 )
 
