@@ -1,7 +1,7 @@
 package ego
 
 import (
-	m "github.com/elos/gen/metis"
+	m "github.com/elos/metis"
 )
 
 // Mappings to equivalent go types
