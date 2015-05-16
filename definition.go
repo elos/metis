@@ -66,12 +66,12 @@ type (
 //  2. It does not have a valid primitive type
 func (td *TraitDef) Valid() error {
 	if td.Name == "" {
-		return errors.New("Trait definition must have a name")
+		return errors.New("trait definition must have a name")
 	}
 
 	_, validType := primitiveLiterals[td.Type]
 	if !validType {
-		return errors.New(fmt.Sprintf("Trait definition must have valid type, type %s is invalid", td.Type))
+		return errors.New(fmt.Sprintf("trait definition must have valid type, type %s is invalid", td.Type))
 	}
 
 	return nil
@@ -99,21 +99,21 @@ func (td *TraitDef) Trait() *Trait {
 // 4. It has a multiplicity of "mul," but no singular form specified
 func (ld *LinkDef) Valid() error {
 	if ld.Name == "" {
-		return errors.New("Link definition must have a name")
+		return errors.New("link definition must have a name")
 	}
 
 	_, validMultiplicity := multiplicityLiterals[ld.Multiplicity]
 	if !validMultiplicity {
-		return errors.New(fmt.Sprintf("Link definition must have valid multiplicity, multiplicity %s is invalid", ld.Multiplicity))
+		return errors.New(fmt.Sprintf("link definition must have valid multiplicity, multiplicity %s is invalid", ld.Multiplicity))
 	}
 
 	if ld.Codomain == "" {
-		return errors.New("Link definition must have codomain")
+		return errors.New("link definition must have codomain")
 	}
 
 	if multiplicityLiterals[ld.Multiplicity] == Mul {
 		if ld.Singular == "" {
-			return errors.New("Mul link defintion must specify singular form")
+			return errors.New("mul link defintion must specify singular form")
 		}
 	}
 
@@ -147,16 +147,16 @@ func (ld *LinkDef) Link() *Link {
 // 5. It has a trait or link error
 func (md *ModelDef) Valid() error {
 	if md.Kind == "" {
-		return errors.New("Model definition must have a kind")
+		return errors.New("model definition must have a kind")
 	}
 
 	if md.Space == "" {
-		return fmt.Errorf("Model definition for %s must have a space", md.Kind)
+		return fmt.Errorf("model definition for %s must have a space", md.Kind)
 	}
 
 	for i := range md.Domains {
 		if md.Domains[i] == "" {
-			return fmt.Errorf("Model definition for %s has no domain", md.Kind)
+			return fmt.Errorf("model definition for %s has no domain", md.Kind)
 		}
 	}
 
@@ -164,21 +164,21 @@ func (md *ModelDef) Valid() error {
 
 	for _, t := range md.Traits {
 		if _, seen := seenNames[t.Name]; seen {
-			return fmt.Errorf("Model %s has name clash %s", md.Kind, t.Name)
+			return fmt.Errorf("model %s has name clash %s", md.Kind, t.Name)
 		}
 
 		if err := t.Valid(); err != nil {
-			return fmt.Errorf("Model %s has trait error: %s", md.Kind, err.Error())
+			return fmt.Errorf("model %s has trait error: %s", md.Kind, err.Error())
 		}
 	}
 
 	for _, l := range md.Links {
 		if _, seen := seenNames[l.Name]; seen {
-			return fmt.Errorf("Model %s name clash %s", md.Kind, l.Name)
+			return fmt.Errorf("model %s name clash %s", md.Kind, l.Name)
 		}
 
 		if err := l.Valid(); err != nil {
-			return fmt.Errorf("Model %s has link error: %s", md.Kind, err.Error())
+			return fmt.Errorf("model %s has link error: %s", md.Kind, err.Error())
 		}
 	}
 
