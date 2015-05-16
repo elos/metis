@@ -2,8 +2,8 @@ package metis
 
 import "strings"
 
-//  SplitSnakeCase splits a string based on the "_" character
-//  e.g., this_is_snake => []string{"this", "is", "snake"}
+// SplitSnakeCase splits a string based on the "_" character
+// e.g., this_is_snake => []string{"this", "is", "snake"}
 func SplitSnakeCase(s string) []string {
 	return strings.Split(s, "_")
 }
