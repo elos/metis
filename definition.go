@@ -104,7 +104,7 @@ func (ld *LinkDef) Valid() error {
 
 	_, validMultiplicity := multiplicityLiterals[ld.Multiplicity]
 	if !validMultiplicity {
-		return errors.New("link definition must have valid multiplicity, multiplicity %s is invalid", ld.Multiplicity)
+		return fmt.Errorf("link definition must have valid multiplicity, multiplicity %s is invalid", ld.Multiplicity)
 	}
 
 	if ld.Codomain == "" {

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/elos/ehttp/templates"
 	"github.com/elos/metis"
-	"github.com/elos/metis/templates"
 )
 
 func attributesTable(m *metis.Model) string {
@@ -59,7 +59,7 @@ type Doc struct {
 }
 
 func (d *Doc) WriteFile(path string) {
-	if err := engine.ParseTemplates(); err != nil {
+	if err := engine.Parse(); err != nil {
 		panic(err)
 	}
 	var buf bytes.Buffer

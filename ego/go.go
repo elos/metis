@@ -10,8 +10,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/elos/ehttp/templates"
 	"github.com/elos/metis"
-	"github.com/elos/metis/templates"
 )
 
 type GoModel struct {
@@ -223,7 +223,7 @@ var (
 			DBs:          []string{"dbs.tmpl"},
 		}).WithFuncMap(funcs)
 
-		err := e.ParseTemplates()
+		err := e.Parse()
 		if err != nil {
 			log.Fatal(err)
 		}
