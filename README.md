@@ -1,4 +1,4 @@
-metis
+metis [![GoDoc](https://godoc.org/github.com/elos/metis?status.svg)](https://godoc.org/github.com/elos/metis)
 -----
 Package metis provides logical structures for modeling persisted data structures and their relationships.
 
