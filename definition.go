@@ -44,7 +44,7 @@ type (
 		Links   []*LinkDef
 	}
 
-	// Definition for a schema
+	// SchemaDef is the definition for a schema
 	//		{
 	//			"version": "<Version>",
 	//			"spaces": ["<space1>", ... ,  "<spaceN>"],
@@ -71,7 +71,7 @@ func (td *TraitDef) Valid() error {
 
 	_, validType := primitiveLiterals[td.Type]
 	if !validType {
-		return errors.New(fmt.Sprintf("trait definition must have valid type, type %s is invalid", td.Type))
+		return fmt.Errorf("trait definition must have valid type, type %s is invalid", td.Type)
 	}
 
 	return nil
@@ -104,7 +104,7 @@ func (ld *LinkDef) Valid() error {
 
 	_, validMultiplicity := multiplicityLiterals[ld.Multiplicity]
 	if !validMultiplicity {
-		return errors.New(fmt.Sprintf("link definition must have valid multiplicity, multiplicity %s is invalid", ld.Multiplicity))
+		return errors.New("link definition must have valid multiplicity, multiplicity %s is invalid", ld.Multiplicity)
 	}
 
 	if ld.Codomain == "" {
