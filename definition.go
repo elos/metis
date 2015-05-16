@@ -6,7 +6,7 @@ import (
 )
 
 type (
-	// Definition for a trait
+	// TraitDef is the definition for a trait
 	//		"traits": [
 	//			{"name": "<Name>", "type": "<Type">},
 	//		]
@@ -15,7 +15,7 @@ type (
 		Type string `json:"type"`
 	}
 
-	// Definition for a link
+	// LinkDef is the definition for a link
 	//		"links": [
 	//			{"name": "<Name>", "multiplicity": "<Multiplicity">,
 	// 			 "codomain": "<Codomain>", "inverse": "<Inverse>"},
@@ -28,7 +28,7 @@ type (
 		Inverse      string `json:"inverse"`
 	}
 
-	// Definition for a model
+	// ModelDef is the definition for a model
 	//		{
 	//			"kind": "<Kind>",
 	//			"space": "<Space>",
