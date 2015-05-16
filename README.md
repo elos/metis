@@ -9,7 +9,7 @@ The overall architecture of metis is quite simple. All model definitions are val
 #### Trait
 A trait has a name, which you use to refer to the attribute and a metis primitive type (e.g. string, int, boolean)
 #### Link
-A link has a name, a multiplicity (one or mul), a singular form (iff multiplicity = mul), a codomain (the space of models which can be assigned to this link, and an inverse (the name of the corresponding model's link to this model).
+A link has a name, a multiplicity (one or mul), a singular form (iff multiplicity = mul), a codomain (the space of models which can be assigned to this link), and an inverse (the name of the corresponding model's link to this model).
 #### Model
 A model has a kind (it's name), a space (it's plural - but also its physical domain), domains (the physcial and abstract spaces this model implements), and a list of traits and a list of links.
 #### Schema
