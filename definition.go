@@ -59,6 +59,11 @@ type (
 
 // TraitDef: Valid() error, Trait *Trait() {{{
 
+// Valid returns an error if the trait definition is invalid
+// or nil otherwise
+// A trait can be invalid for 2 reasons
+//	1. It does not have a name
+//  2. It does not have a valid primitive type
 func (td *TraitDef) Valid() error {
 	if td.Name == "" {
 		return errors.New("Trait definition must have a name")
@@ -72,6 +77,8 @@ func (td *TraitDef) Valid() error {
 	return nil
 }
 
+// Trait returns a metis.Trait built from the
+// Trait definition, TraitDef
 func (td *TraitDef) Trait() *Trait {
 	return &Trait{
 		Name: td.Name,
@@ -83,6 +90,13 @@ func (td *TraitDef) Trait() *Trait {
 
 // LinkDef: Valid() error, Link() *Link  {{{
 
+// Valid returns an error if a Link definition is invalid,
+// or nil otherwise
+// A Link can be invalid for 4 reasons
+// 1. It does not have a valid name
+// 2. It has an invalid multiplicity
+// 3. It lacks a codomain
+// 4. It has a multiplicity of "mul," but no singular form specified
 func (ld *LinkDef) Valid() error {
 	if ld.Name == "" {
 		return errors.New("Link definition must have a name")
@@ -106,6 +120,8 @@ func (ld *LinkDef) Valid() error {
 	return nil
 }
 
+// Link returns a metis.Link that is based on the
+// definition of this LinkDef
 func (ld *LinkDef) Link() *Link {
 	return &Link{
 		Name:         ld.Name,
@@ -120,6 +136,15 @@ func (ld *LinkDef) Link() *Link {
 
 // ModelDef: Valid() error, Model() *Model {{{
 
+// Valid returns an error if the Model definition is invalid
+// or nil otherwise. Valid recursively checks the validity
+// of a model's traits and links
+// A model can be invalid for 5 reasons
+// 1. It does not have a kind
+// 2. It does not have a space
+// 3. It does not have a domain defined
+// 4. It has a trait or link  name clash
+// 5. It has a trait or link error
 func (md *ModelDef) Valid() error {
 	if md.Kind == "" {
 		return errors.New("Model definition must have a kind")
@@ -160,6 +185,8 @@ func (md *ModelDef) Valid() error {
 	return nil
 }
 
+// Model creates a metis.Model using the definition
+// defined in the ModelDef
 func (md *ModelDef) Model() *Model {
 	m := &Model{
 		Kind:    md.Kind,
