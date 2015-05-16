@@ -32,33 +32,37 @@ type (
 )
 
 type (
-	Primitive    int
+	// Primitive is a base type of a trait
+	Primitive int
+	// Multiplicity reps the size of a link
 	Multiplicity int
 	Producer     interface {
 		WriteFile(string)
 	}
 )
 
-// Primitive Data Types
+// Primitive Data Types we list respective
+// go types in comments for clarity
+// metis _is_ in go after all :)
 const (
-	Boolean Primitive = iota
-	Integer
-	String
-	DateTime
+	Boolean  Primitive = iota // bool
+	Integer                   // int
+	String                    // string
+	DateTime                  // time.Time
 
-	BooleanList
-	IntegerList
-	StringList
-	DateTimeList
+	BooleanList  // []bool
+	IntegerList  // []int
+	StringList   // []string
+	DateTimeList // []time.Time
 
-	ID
-	IDList
+	ID     // string
+	IDList //[]string
 
-	StringIDMap
+	StringIDMap // map[string]string
 )
 
 // Primitive Multiplicities
 const (
-	Mul Multiplicity = iota
-	One
+	Mul Multiplicity = iota // has_many
+	One                     // belongs_to (because the id is on the struct)
 )

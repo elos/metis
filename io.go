@@ -15,6 +15,9 @@ var (
 	Path       = templates.PackagePath(ImportPath)
 )
 
+// Parses a glob pattern (i.e., "./models/*json") and returns
+// a slice of said models, or an error if the pattern doesn't
+// match any files
 func ParseGlob(pattern string) ([]*Model, error) {
 	filenames, err := filepath.Glob(pattern)
 	if err != nil {
@@ -27,6 +30,7 @@ func ParseGlob(pattern string) ([]*Model, error) {
 	return ParseModelFiles(filenames...), nil
 }
 
+// ParseModelFiles
 func ParseModelFiles(filenames ...string) []*Model {
 	models := make([]*Model, len(filenames))
 	for i := range filenames {
