@@ -36,9 +36,6 @@ func attributesTable(m *metis.Model) string {
 	return string(buf.Bytes())
 }
 
-func rowTrait(t *metis.Trait) {
-}
-
 var (
 	importPath                = filepath.Join(metis.ImportPath, "doc")
 	dirPath                   = templates.PackagePath(importPath)
