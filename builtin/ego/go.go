@@ -175,7 +175,7 @@ func mulLinkAccessorsVar(m *metis.Model, l *metis.Link) *accessVar {
 }
 
 var (
-	templatesDir = filepath.Join(metis.Path, "ego", "templates")
+	templatesDir = filepath.Join(metis.Path, "builtin", "ego", "templates")
 	pattern      = filepath.Join(templatesDir, "*.tmpl")
 
 	funcs = map[string]interface{}{
