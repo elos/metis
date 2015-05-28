@@ -70,7 +70,8 @@ const (
 	ID     // string
 	IDList //[]string
 
-	StringIDMap // map[string]string
+	StringIDMap  // map[string]id
+	IntegerIDMap // map[integer]id
 )
 
 // Primitive Multiplicities
