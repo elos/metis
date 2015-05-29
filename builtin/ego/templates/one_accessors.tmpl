@@ -1,6 +1,7 @@
 {{define "OneAccessors"}}
 {{template "Setter" $}}
 {{template "Getter" $}}
+{{template "OrCreate" $}}
 {{end}}
 
 {{define "Setter"}}
@@ -31,4 +32,32 @@
         return {{camel .Other.Kind}}, db.PopulateByID({{camel .Other.Kind}})
     {{end}}
 }
+{{end}}
+
+{{define "OrCreate"}}
+{{if .Other.IsPhysical}}
+{{sig .Model}} {{name .This.Link.Name}}OrCreate(db data.DB) ({{.Other.Type}}, error) {
+    {{camel .Other.Kind}}, err := {{this .Model}}.{{name .This.Link.Name}}(db)
+
+    if err == ErrEmptyLink {
+        {{camel .Other.Kind}} := New{{name .Other.Kind}}()
+        {{camel .Other.Kind}}.SetID(db.NewID())
+        if err := {{this .Model}}.Set{{name .This.Link.Name}}({{camel .Other.Kind}}); err != nil {
+            return nil, err
+        }
+
+        if err := db.Save({{camel .Other.Kind}}); err != nil {
+            return nil, err
+        }
+
+        if err := db.Save({{this .Model}}); err != nil {
+            return nil, err
+        }
+
+        return {{camel .Other.Kind}}, nil
+    } else {
+        return {{camel .Other.Kind}}, err
+    }
+}
+{{end}}
 {{end}}
