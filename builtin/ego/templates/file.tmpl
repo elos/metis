@@ -10,6 +10,7 @@
     {{typeDefinition .Model}}
 
     {{template "Constructor" $}}
+    {{template "Find" $}}
 
     {{template "Kind" $}}
     {{template "Concerned" $}}
@@ -74,4 +75,20 @@ func New{{name .Kind}}() *{{name .Kind}} {
 {{sig .Model}} ID() data.ID {
     return data.ID({{this .Model}}.Id)
 }
+{{end}}
+
+{{define "Find"}}
+    {{with $model := .Model}}
+        {{with $name := (name $model.Kind)}}
+        func Find{{$name}}(db data.DB, id data.ID) (*{{$name}}, error) {
+            {{with $modelVar := (camel $model.Kind)}}
+
+                {{$modelVar}} := New{{$name}}()
+                {{$modelVar}}.SetID(id)
+
+                return {{$modelVar}}, db.PopulateByID({{$modelVar}})
+            {{end}}
+        }
+        {{end}}
+    {{end}}
 {{end}}
