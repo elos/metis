@@ -4,6 +4,7 @@ package metis
 var primitiveLiterals = map[string]Primitive{
 	"boolean":        Boolean,
 	"integer":        Integer,
+	"float":          Float,
 	"string":         String,
 	"datetime":       DateTime,
 	"[]boolean":      BooleanList,
@@ -19,6 +20,7 @@ var primitiveLiterals = map[string]Primitive{
 var InvPrimitiveLiterals = map[Primitive]string{
 	Boolean:      "boolean",
 	Integer:      "integer",
+	Float:        "float",
 	String:       "string",
 	DateTime:     "datetime",
 	BooleanList:  "[]boolean",

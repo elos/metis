@@ -59,6 +59,7 @@ type (
 const (
 	Boolean  Primitive = iota // bool
 	Integer                   // int
+	Float                     // float
 	String                    // string
 	DateTime                  // time.Time
 

@@ -8,6 +8,7 @@ import (
 var PrimitiveTypes = map[m.Primitive]string{
 	m.Boolean:      "bool",
 	m.Integer:      "int",
+	m.Float:        "float64",
 	m.String:       "string",
 	m.DateTime:     "time.Time",
 	m.BooleanList:  "[]bool",
