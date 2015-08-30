@@ -22,7 +22,10 @@ func main() {
 			log.Fatalf("error parsing %s: %s", arg, err)
 		}
 	} else {
-		model := metis.ParseModelFile(arg)
+		model, err := metis.ParseModelFile(arg)
+		if err != nil {
+			log.Fatal(err)
+		}
 		models[0] = model
 	}
 

@@ -4,18 +4,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"path/filepath"
 
 	"github.com/elos/ehttp/templates"
 )
 
-var (
-	ImportPath = "github.com/elos/metis"
-	Path       = templates.PackagePath(ImportPath)
-)
+// The relative import path of this library
+const ImportPath = "github.com/elos/metis"
 
-// Parses a glob pattern (i.e., "./models/*json") and returns
+// The absolute file path of this package
+var Path = templates.PackagePath(ImportPath)
+
+// ParseGlob follows a glob pattern (i.e., "./models/*.json") and returns
 // a slice of said models, or an error if the pattern doesn't
 // match any files
 func ParseGlob(pattern string) ([]*Model, error) {
@@ -23,36 +23,47 @@ func ParseGlob(pattern string) ([]*Model, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Consider no match an error
 	if len(filenames) == 0 {
 		return nil, fmt.Errorf("metis: pattern matches no files: %#q", pattern)
 	}
 
-	return ParseModelFiles(filenames...), nil
+	return ParseModelFiles(filenames...)
 }
 
-// ParseModelFiles
-func ParseModelFiles(filenames ...string) []*Model {
+// ParseModelFiles takes an array of file names and returns the parsed models
+func ParseModelFiles(filenames ...string) ([]*Model, error) {
 	models := make([]*Model, len(filenames))
 	for i := range filenames {
-		models[i] = ParseModelFile(filenames[i])
+		tm, err := ParseModelFile(filenames[i])
+
+		if err != nil {
+			return models, err
+		}
+
+		models[i] = tm
 	}
-	return models
+	return models, nil
 }
 
-func ParseModelFile(filepath string) *Model {
+// ParseModelFile takes a model definition file and parses it, returns an
+// error if it the JSON was invalid or the definition was invalid
+func ParseModelFile(filepath string) (*Model, error) {
 	input, err := ioutil.ReadFile(filepath)
+
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	md := ModelDef{}
-	err = json.Unmarshal(input, &md)
-	if err != nil {
-		log.Fatal(err)
+	if err := json.Unmarshal(input, &md); err != nil {
+		return nil, err
 	}
 
 	if err := md.Valid(); err != nil {
-		panic(err)
+		return nil, err
 	}
-	return md.Model()
+
+	return md.Model(), nil
 }
