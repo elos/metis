@@ -5,6 +5,12 @@ import (
 	"fmt"
 )
 
+// Definition are the JSON blueprints for the logical components of metis.
+// It follows, then, that you can have a Trait definition, a link definition
+// and a model definition. These definitions have rules of validity applied to
+// them and each has a transformation,
+// Valid: d ∈ Definitions → l ∈ Logical Components
+
 type (
 	// TraitDef is the definition for a trait
 	//		"traits": [
@@ -142,8 +148,8 @@ func (ld *LinkDef) Link() *Link {
 // A model can be invalid for 5 reasons
 // 1. It does not have a kind
 // 2. It does not have a space
-// 3. It does not have a domain defined
-// 4. It has a trait or link  name clash
+// 3. It does not have at least one domain defined
+// 4. It has a trait or link name clash
 // 5. It has a trait or link error
 func (md *ModelDef) Valid() error {
 	if md.Kind == "" {
