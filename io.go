@@ -9,6 +9,10 @@ import (
 	"github.com/elos/ehttp/templates"
 )
 
+type Producer interface {
+	WriteFile(string)
+}
+
 // The relative import path of this library
 const ImportPath = "github.com/elos/metis"
 

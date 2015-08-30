@@ -1,5 +1,7 @@
 package metis
 
+// Here we define types for the core logical components.
+// Namely a trait, link, model and schema
 type (
 	// A trait has a name, which you use to refer to the attribute and a
 	// metis primitive type (e.g. string, int, boolean)
@@ -9,7 +11,7 @@ type (
 	}
 
 	// A link has a name, a multiplicity (one or mul), a singular form
-	// (iff multiplicity = mul), a codomain (the space of models which can be
+	// (iff multiplicity == mul), a codomain (the space of models which can be
 	// assigned to this link), and an inverse (the name of the corresponding
 	// model's link to this model).
 	Link struct {
@@ -43,19 +45,12 @@ type (
 	}
 )
 
-type (
-	// Primitive is a base type of a trait
-	Primitive int
-	// Multiplicity reps the size of a link
-	Multiplicity int
-	Producer     interface {
-		WriteFile(string)
-	}
-)
+// Primitive is the pure base type of the value of trait
+type Primitive int
 
-// Primitive Data Types we list respective
-// go types in comments for clarity
-// metis _is_ in go after all :)
+// Primitive trait data types.
+// We list respective go types in comments for clarity
+// metis _is_ in implemented in Go after all :)
 const (
 	Boolean  Primitive = iota // bool
 	Integer                   // int
@@ -75,7 +70,9 @@ const (
 	IntegerIDMap // map[integer]id
 )
 
-// Primitive Multiplicities
+// Multiplicity represents the size of a link
+type Multiplicity int
+
 const (
 	Mul Multiplicity = iota // has_many
 	One                     // belongs_to (because the id is on the struct)
