@@ -3,7 +3,7 @@ metis [![GoDoc](https://godoc.org/github.com/elos/metis?status.svg)](https://god
 Package metis provides logical structures for modeling persisted data structures and their relationships. It also provides formal verification of the validity of a relational object schema.
 
 ### Architecture
-The overall architecture of metis is quite simple. All model definitions are valid JSON. Models can have traits (attributes) and links (relationships). A group of models collectively and implicitly defines a schema. Metis has basic io parsing, which reads in model definition files and then you can use `BuildSchema(models)` to get a schema from these definitions. Metis first serializes the JSON to go structs (ModelDef, TraitDef, LinkDef, and SchemaDef), at this stage in warns of any errors (invalid link references, bad codomains etc).
+The overall architecture of metis is quite simple. All model definitions are valid JSON. Models can have traits (attributes) and links (relationships). A group of models collectively and implicitly defines a schema. Metis has basic IO parsing, which reads in model definition files and then you can use `BuildSchema(models)` to get a schema from these definitions. Metis first serializes the JSON to go structs (ModelDef, TraitDef, LinkDef, and SchemaDef), at this stage in warns of any errors (invalid link references, bad codomains etc).
 
 ### Components
 #### Trait
