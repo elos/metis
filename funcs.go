@@ -2,9 +2,10 @@ package metis
 
 import "strings"
 
-// The following are helper functions which bridge the linguistical gaps between
-// English and various computer languages.
+// The following are convenience functions to help bridge linguistic gaps
+// between English and various computer languages.
 
+// eq determines the equivalence of two string arrays
 func eq(one, two []string) bool {
 	for i, s := range one {
 		if s != two[i] {
@@ -15,12 +16,12 @@ func eq(one, two []string) bool {
 	return true
 }
 
-// The identity function for a string
+// id serves as an identity function for a string
 func id(s string) string {
 	return s
 }
 
-// The apply functional equivalent for strings
+// apply is the functional application operator for string arrays
 func apply(s []string, f func(string) string) []string {
 	ns := make([]string, len(s))
 	for i, ss := range s {
@@ -29,7 +30,7 @@ func apply(s []string, f func(string) string) []string {
 	return ns
 }
 
-// The reduce functional equivalent for strings
+// reduce is the functional reduction operator for string arrays
 func reduce(start string, strings []string, f func(string, string) string) string {
 	ns := start
 	apply(strings, func(s string) string {
@@ -61,11 +62,9 @@ func CamelCase(s string) string {
 	return ns
 }
 
-// Initials returns the first letter of each word
-// as defined by snake case.
+// Initials returns the first letter of each word as defined by snake case.
 // e.g., this_is_snake_case => []string{"t", "i", "s", "c"}
-// Used at times to define the variable used as a struct pointer for
-// methods in go i.e., u for User model
+// Note: used to shorten variable names. e.g., u for a User model
 func Initials(s string) []string {
 	splits := SplitSnakeCase(s)
 	for i, s := range splits {
@@ -75,21 +74,19 @@ func Initials(s string) []string {
 }
 
 // AppendStrings joins a list of strings together
-// useful for templates, e.g., {{append metis.Name metis.LinkName}}
+// Note: used in templates. e.g., {{append metis.Name metis.LinkName}}
 func AppendStrings(v ...string) string {
 	return reduce("", v, func(x, y string) string {
 		return x + y
 	})
 }
 
-// IsMul returns a flag whether the link's
-// multiplicity == metis.Mul
+// IsMul determines whether Link l is a multi-link
 func IsMul(l *Link) bool {
 	return l.Multiplicity == Mul
 }
 
-// IsID returns a flag whether the trait's
-// primitive type == metis.ID
+// IsID determines whether Trait t has primitive type of ID
 func IsID(t *Trait) bool {
 	return t.Type == ID
 }
