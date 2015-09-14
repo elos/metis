@@ -1,7 +1,7 @@
 package metis
 
-// Here we define types for the core logical components.
-// Namely a trait, link, model and schema
+// Here we define types for the metis logical core.
+
 type (
 	// A trait has a name, which you use to refer to the attribute and a
 	// metis primitive type (e.g. string, int, boolean)

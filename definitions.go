@@ -49,18 +49,6 @@ type (
 		Traits  []*TraitDef
 		Links   []*LinkDef
 	}
-
-	// SchemaDef is the definition for a schema
-	//		{
-	//			"version": "<Version>",
-	//			"spaces": ["<space1>", ... ,  "<spaceN>"],
-	//			"domains": ["<domain1>", ... , "<domainN>"],
-	//		}
-	SchemaDef struct {
-		Version string   `json:"version"`
-		Spaces  []string `json:"spaces"`
-		Domains []string `json:"domains"`
-	}
 )
 
 // TraitDef: Valid() error, Trait *Trait() {{{
