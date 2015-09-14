@@ -65,11 +65,10 @@ type (
 
 // TraitDef: Valid() error, Trait *Trait() {{{
 
-// Valid returns an error if the trait definition is invalid
-// or nil otherwise
+// Valid returns an error if the trait definition is invalid, otherwise nil.
 // A trait can be invalid for 2 reasons
-//	1. It does not have a name
-//  2. It does not have a valid primitive type
+//	1. It lacks a name
+//  2. It lacks a valid primitive type
 func (td *TraitDef) Valid() error {
 	if td.Name == "" {
 		return errors.New("trait definition must have a name")
@@ -83,8 +82,7 @@ func (td *TraitDef) Valid() error {
 	return nil
 }
 
-// Trait returns a metis.Trait built from the
-// Trait definition, TraitDef
+// Trait constructs and returns a metis.Trait built from the defintion
 func (td *TraitDef) Trait() *Trait {
 	return &Trait{
 		Name: td.Name,
@@ -96,13 +94,12 @@ func (td *TraitDef) Trait() *Trait {
 
 // LinkDef: Valid() error, Link() *Link  {{{
 
-// Valid returns an error if a Link definition is invalid,
-// or nil otherwise
+// Valid returns an error if a Link definition is invalid, otherwise nil.
 // A Link can be invalid for 4 reasons
-// 1. It does not have a valid name
-// 2. It has an invalid multiplicity
-// 3. It lacks a codomain
-// 4. It has a multiplicity of "mul," but no singular form specified
+//  1. It lacks a name
+//  2. It lacks a valid multiplicity
+//  3. It lacks a codomain
+//  4. It lakcs a singular form, despite having a multiplicity of "mul"
 func (ld *LinkDef) Valid() error {
 	if ld.Name == "" {
 		return errors.New("link definition must have a name")
@@ -126,8 +123,7 @@ func (ld *LinkDef) Valid() error {
 	return nil
 }
 
-// Link returns a metis.Link that is based on the
-// definition of this LinkDef
+// Link constructs and returns a metis.Link built from the definition
 func (ld *LinkDef) Link() *Link {
 	return &Link{
 		Name:         ld.Name,
@@ -142,15 +138,14 @@ func (ld *LinkDef) Link() *Link {
 
 // ModelDef: Valid() error, Model() *Model {{{
 
-// Valid returns an error if the Model definition is invalid
-// or nil otherwise. Valid recursively checks the validity
-// of a model's traits and links
+// Valid returns an error if the Model definition is invalid, otherwise nil.
+// Note: Valid checks the validity of the traits and links of the model
 // A model can be invalid for 5 reasons
-// 1. It does not have a kind
-// 2. It does not have a space
-// 3. It does not have at least one domain defined
-// 4. It has a trait or link name clash
-// 5. It has a trait or link error
+//  1. It lacks a kind
+//  2. It lacks a space
+//  3. It lacks at least one domain
+//  4. It has a trait or link name clash
+//  5. It has a trait or link error
 func (md *ModelDef) Valid() error {
 	if md.Kind == "" {
 		return errors.New("model definition must have a kind")
@@ -191,8 +186,8 @@ func (md *ModelDef) Valid() error {
 	return nil
 }
 
-// Model creates a metis.Model using the definition
-// defined in the ModelDef
+// Model constructs and returns a metis.Model built from the definition
+// Note: This procedure will also construct the traits and links of the model
 func (md *ModelDef) Model() *Model {
 	m := &Model{
 		Kind:    md.Kind,
