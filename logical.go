@@ -14,7 +14,7 @@ type (
 	// (iff multiplicity == mul), a codomain (the space of models which can be
 	// assigned to this link), and an inverse (the name of the corresponding
 	// model's link to this model).
-	Link struct {
+	Relation struct {
 		Name         string
 		Multiplicity Multiplicity
 		Singular     string
@@ -26,11 +26,11 @@ type (
 	// its physical domain), domains (the physcial and abstract spaces
 	// this model implements), and a list of traits and a list of links.
 	Model struct {
-		Kind    string
-		Space   string
-		Domains []string
-		Traits  map[string]*Trait
-		Links   map[string]*Link
+		Kind      string
+		Space     string
+		Domains   []string
+		Traits    map[string]*Trait
+		Relations map[string]*Relation
 		*Schema
 	}
 

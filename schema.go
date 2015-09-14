@@ -4,7 +4,7 @@ import "fmt"
 
 // Schema doesn't have any IO parsing, since a schema is implicitly defined by the models
 // which compose it. Here's to decentralization! Because of this, the composition of a schema
-// and it's verification are two separaten steps. Any set of models can be composed into a schema
+// and it's verification are two separate steps. Any set of models can be composed into a schema
 // but that does not necessarily make them a valid schema. To compose models, use BuildSchema, to
 // verify the schema use Valid()
 
@@ -31,12 +31,13 @@ func BuildSchema(models ...*Model) *Schema {
 		s.Models[m.Space] = m
 
 		for i := range m.Domains {
-			// We only care to tally up the valid domains, several
-			// models may implement the same domain
+			// We only care to tally up the set of unique domains
+			// Note: several models may implement the same domain
 			s.Domains[m.Domains[i]] = true
 		}
 
-		// Each space is only associated with one model, and therefore one "kind"
+		// Each space is only associated with one model,
+		// and therefore one "kind"
 		s.Spaces[m.Space] = m.Kind
 
 		// Now we can establish this model as a member of our new schema
@@ -48,6 +49,8 @@ func BuildSchema(models ...*Model) *Schema {
 
 // Valid verifies whether the individual models together form a logically valid
 // schema. Think about this like the verification of the relationships between models.
+// This is the climax of everything in metis. A formal verification of the constituent
+// models
 func (s *Schema) Valid() error {
 	// We need to verify uniqueness of both kinds and spaces
 	seenKinds := make(map[string]bool)
@@ -66,26 +69,28 @@ func (s *Schema) Valid() error {
 
 		seenSpaces[m.Space] = true
 
-		for _, l := range m.Links {
-			// there must be a codomain defined
-			if _, codomainDefined := s.Domains[l.Codomain]; !codomainDefined {
-				return fmt.Errorf("model %s has codomain that is undefined: %s", m.Kind, l.Codomain)
+		for _, r := range m.Relations {
+			// The codomain must be a valid domain
+			if _, codomainDefined := s.Domains[r.Codomain]; !codomainDefined {
+				return fmt.Errorf("relation '%s' on model '%s' specifies invalid codomain: %s", r.Name, m.Kind, r.Codomain)
 			}
 
-			if l.Inverse == "" {
+			if r.Inverse == "" {
 				continue // don't need to check inverses
 			}
 
+			// Checking complications related to inverses:
+
 			// for a codomain to have an inverse, it must be a concrete space
-			if _, concrete := s.Spaces[l.Codomain]; !concrete {
-				return fmt.Errorf("model %s has codomain that is not concrete but has inverse", m.Kind)
+			if s.IsPhysical(r.Codomain) {
+				return fmt.Errorf("relation '%s' on model '%s' has codomain that is not physical, but attempts to specify inverse", r.Name, m.Kind)
 			}
 
-			other := s.Models[l.Codomain]
+			other := s.Models[r.Codomain]
 
-			// that concrete definition must have matching inverse
-			if _, ok := other.Links[l.Inverse]; !ok {
-				return fmt.Errorf("model %s, link %s has invalid inverse definition: %s", m.Kind, l.Name, l.Inverse)
+			// that physical definition must have matching inverse
+			if _, ok := other.Relations[r.Inverse]; !ok {
+				return fmt.Errorf("relation '%s' on model '%s' has unrequited inverse: %s", r.Name, m.Kind, r.Inverse)
 			}
 		}
 	}

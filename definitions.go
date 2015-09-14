@@ -12,7 +12,7 @@ import (
 // validity and a transformation to construct a well-formed logical component.
 
 type (
-	// TraitDef is the definition for a trait
+	// TraitDef is the definition for a trait.
 	//		"traits": [
 	//			{"name": "<Name>", "type": "<Type">},
 	//		]
@@ -21,12 +21,12 @@ type (
 		Type string `json:"type"`
 	}
 
-	// LinkDef is the definition for a link
-	//		"links": [
+	// RelationDef is the definition for a relation.
+	//		"relations": [
 	//			{"name": "<Name>", "multiplicity": "<Multiplicity">,
 	// 			 "codomain": "<Codomain>", "inverse": "<Inverse>"},
 	//		]
-	LinkDef struct {
+	RelationDef struct {
 		Name         string `json:"name"`
 		Multiplicity string `json:"multiplicity"`
 		Singular     string `json:"singular"`
@@ -40,14 +40,14 @@ type (
 	//			"space": "<Space>",
 	//			"domains": "<Domains>",
 	//			"traits": [ ... ],
-	//			"links": [ ... ],
+	//			"relations": [ ... ],
 	//		}
 	ModelDef struct {
-		Kind    string   `json:"kind"`
-		Space   string   `json:"space"`
-		Domains []string `json:"domains"`
-		Traits  []*TraitDef
-		Links   []*LinkDef
+		Kind      string   `json:"kind"`
+		Space     string   `json:"space"`
+		Domains   []string `json:"domains"`
+		Traits    []*TraitDef
+		Relations []*RelationDef
 	}
 )
 
@@ -80,7 +80,7 @@ func (td *TraitDef) Trait() *Trait {
 
 // }}}
 
-// LinkDef: Valid() error, Link() *Link  {{{
+// RelationDef: Valid() error, Link() *Link  {{{
 
 // Valid returns an error if a Link definition is invalid, otherwise nil.
 // A Link can be invalid for 4 reasons
@@ -88,7 +88,7 @@ func (td *TraitDef) Trait() *Trait {
 //  2. It lacks a valid multiplicity
 //  3. It lacks a codomain
 //  4. It lakcs a singular form, despite having a multiplicity of "mul"
-func (ld *LinkDef) Valid() error {
+func (ld *RelationDef) Valid() error {
 	if ld.Name == "" {
 		return errors.New("link definition must have a name")
 	}
@@ -111,9 +111,9 @@ func (ld *LinkDef) Valid() error {
 	return nil
 }
 
-// Link constructs and returns a metis.Link built from the definition
-func (ld *LinkDef) Link() *Link {
-	return &Link{
+// Relation constructs and returns a metis.Link built from the definition
+func (ld *RelationDef) Relation() *Relation {
+	return &Relation{
 		Name:         ld.Name,
 		Multiplicity: multiplicityLiterals[ld.Multiplicity],
 		Singular:     ld.Singular,
@@ -161,7 +161,7 @@ func (md *ModelDef) Valid() error {
 		}
 	}
 
-	for _, l := range md.Links {
+	for _, l := range md.Relations {
 		if _, seen := seenNames[l.Name]; seen {
 			return fmt.Errorf("model %s name clash %s", md.Kind, l.Name)
 		}
@@ -178,19 +178,19 @@ func (md *ModelDef) Valid() error {
 // Note: This procedure will also construct the traits and links of the model
 func (md *ModelDef) Model() *Model {
 	m := &Model{
-		Kind:    md.Kind,
-		Space:   md.Space,
-		Domains: md.Domains,
-		Traits:  make(map[string]*Trait),
-		Links:   make(map[string]*Link),
+		Kind:      md.Kind,
+		Space:     md.Space,
+		Domains:   md.Domains,
+		Traits:    make(map[string]*Trait),
+		Relations: make(map[string]*Relation),
 	}
 
 	for _, td := range md.Traits {
 		m.Traits[td.Name] = td.Trait()
 	}
 
-	for _, ld := range md.Links {
-		m.Links[ld.Name] = ld.Link()
+	for _, ld := range md.Relations {
+		m.Relations[ld.Name] = ld.Relation()
 	}
 
 	return m

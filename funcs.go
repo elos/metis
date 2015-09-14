@@ -81,8 +81,8 @@ func AppendStrings(v ...string) string {
 	})
 }
 
-// IsMul determines whether Link l is a multi-link
-func IsMul(l *Link) bool {
+// IsMul determines whether Relation l is a multi-relation
+func IsMul(l *Relation) bool {
 	return l.Multiplicity == Mul
 }
 
