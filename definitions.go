@@ -5,11 +5,11 @@ import (
 	"fmt"
 )
 
-// Definition are the JSON blueprints for the logical components of metis.
-// It follows, then, that you can have a Trait definition, a link definition
-// and a model definition. These definitions have rules of validity applied to
-// them and each has a transformation,
-// Valid: d ∈ Definitions → l ∈ Logical Components
+// These definition structures are the JSON blueprints for the logical components
+// of metis. It follows, then, that you can have trait, link, and model defintions.
+// A definition is not necessarily a valid metis construct, and therefore is treated
+// as a intermediate stage. We define a function on each definition to check its
+// validity and a transformation to construct a well-formed logical component.
 
 type (
 	// TraitDef is the definition for a trait
