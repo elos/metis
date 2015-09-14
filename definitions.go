@@ -161,12 +161,12 @@ func (md *ModelDef) Valid() error {
 		}
 	}
 
-	for _, l := range md.Relations {
-		if _, seen := seenNames[l.Name]; seen {
-			return fmt.Errorf("model %s name clash %s", md.Kind, l.Name)
+	for _, rd := range md.Relations {
+		if _, seen := seenNames[rd.Name]; seen {
+			return fmt.Errorf("model %s name clash %s", md.Kind, rd.Name)
 		}
 
-		if err := l.Valid(); err != nil {
+		if err := rd.Valid(); err != nil {
 			return fmt.Errorf("model %s has link error: %s", md.Kind, err.Error())
 		}
 	}
@@ -189,12 +189,11 @@ func (md *ModelDef) Model() *Model {
 		m.Traits[td.Name] = td.Trait()
 	}
 
-	for _, ld := range md.Relations {
-		m.Relations[ld.Name] = ld.Relation()
+	for _, rd := range md.Relations {
+		m.Relations[rd.Name] = rd.Relation()
 	}
 
 	return m
-
 }
 
 // }}}
