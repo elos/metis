@@ -6,7 +6,7 @@ import (
 )
 
 // These definition structures are the JSON blueprints for the logical components
-// of metis. It follows, then, that you can have trait, link, and model defintions.
+// of metis. It follows, then, that you can have trait, relation, and model defintions.
 // A definition is not necessarily a valid metis construct, and therefore is treated
 // as a intermediate stage. We define a function on each definition to check its
 // validity and a transformation to construct a well-formed logical component.
@@ -80,38 +80,38 @@ func (td *TraitDef) Trait() *Trait {
 
 // }}}
 
-// RelationDef: Valid() error, Link() *Link  {{{
+// RelationDef: Valid() error, Relation() *Relation  {{{
 
-// Valid returns an error if a Link definition is invalid, otherwise nil.
-// A Link can be invalid for 4 reasons
+// Valid returns an error if a Relation definition is invalid, otherwise nil.
+// A Relation can be invalid for 4 reasons
 //  1. It lacks a name
 //  2. It lacks a valid multiplicity
 //  3. It lacks a codomain
 //  4. It lakcs a singular form, despite having a multiplicity of "mul"
 func (ld *RelationDef) Valid() error {
 	if ld.Name == "" {
-		return errors.New("link definition must have a name")
+		return errors.New("relation definition must have a name")
 	}
 
 	_, validMultiplicity := multiplicityLiterals[ld.Multiplicity]
 	if !validMultiplicity {
-		return fmt.Errorf("link definition must have valid multiplicity, multiplicity %s is invalid", ld.Multiplicity)
+		return fmt.Errorf("relation definition must have valid multiplicity, multiplicity %s is invalid", ld.Multiplicity)
 	}
 
 	if ld.Codomain == "" {
-		return errors.New("link definition must have codomain")
+		return errors.New("relation definition must have codomain")
 	}
 
 	if multiplicityLiterals[ld.Multiplicity] == Mul {
 		if ld.Singular == "" {
-			return errors.New("mul link defintion must specify singular form")
+			return errors.New("mul relation definition must specify singular form")
 		}
 	}
 
 	return nil
 }
 
-// Relation constructs and returns a metis.Link built from the definition
+// Relation constructs and returns a metis.Relation built from the definition
 func (ld *RelationDef) Relation() *Relation {
 	return &Relation{
 		Name:         ld.Name,
@@ -127,13 +127,13 @@ func (ld *RelationDef) Relation() *Relation {
 // ModelDef: Valid() error, Model() *Model {{{
 
 // Valid returns an error if the Model definition is invalid, otherwise nil.
-// Note: Valid checks the validity of the traits and links of the model
+// Note: Valid checks the validity of the traits and relations of the model
 // A model can be invalid for 5 reasons
 //  1. It lacks a kind
 //  2. It lacks a space
 //  3. It lacks at least one domain
-//  4. It has a trait or link name clash
-//  5. It has a trait or link error
+//  4. It has a trait or relation name clash
+//  5. It has a trait or relation error
 func (md *ModelDef) Valid() error {
 	if md.Kind == "" {
 		return errors.New("model definition must have a kind")
@@ -153,21 +153,21 @@ func (md *ModelDef) Valid() error {
 
 	for _, t := range md.Traits {
 		if _, seen := seenNames[t.Name]; seen {
-			return fmt.Errorf("model %s has name clash %s", md.Kind, t.Name)
+			return fmt.Errorf("model '%s' has name clash '%s'", md.Kind, t.Name)
 		}
 
 		if err := t.Valid(); err != nil {
-			return fmt.Errorf("model %s has trait error: %s", md.Kind, err.Error())
+			return fmt.Errorf("model '%s' has trait error: '%s'", md.Kind, err.Error())
 		}
 	}
 
 	for _, rd := range md.Relations {
 		if _, seen := seenNames[rd.Name]; seen {
-			return fmt.Errorf("model %s name clash %s", md.Kind, rd.Name)
+			return fmt.Errorf("model '%s' name clash '%s'", md.Kind, rd.Name)
 		}
 
 		if err := rd.Valid(); err != nil {
-			return fmt.Errorf("model %s has link error: %s", md.Kind, err.Error())
+			return fmt.Errorf("model '%s' has relation error: '%s'", md.Kind, err.Error())
 		}
 	}
 
@@ -175,7 +175,7 @@ func (md *ModelDef) Valid() error {
 }
 
 // Model constructs and returns a metis.Model built from the definition
-// Note: This procedure will also construct the traits and links of the model
+// Note: This procedure will also construct the traits and relations of the model
 func (md *ModelDef) Model() *Model {
 	m := &Model{
 		Kind:      md.Kind,
