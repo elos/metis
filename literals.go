@@ -30,7 +30,7 @@ var InvPrimitiveLiterals = map[Primitive]string{
 	ID:           "id",
 	IDList:       "[]id",
 	StringIDMap:  "map[string]id",
-	IntegerIDMap: "mao[integer]id",
+	IntegerIDMap: "map[integer]id",
 }
 
 var multiplicityLiterals = map[string]Multiplicity{
