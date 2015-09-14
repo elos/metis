@@ -82,7 +82,7 @@ func (s *Schema) Valid() error {
 			// Checking complications related to inverses:
 
 			// for a codomain to have an inverse, it must be a concrete space
-			if s.IsPhysical(r.Codomain) {
+			if !s.IsPhysical(r.Codomain) {
 				return fmt.Errorf("relation '%s' on model '%s' has codomain that is not physical, but attempts to specify inverse", r.Name, m.Kind)
 			}
 
