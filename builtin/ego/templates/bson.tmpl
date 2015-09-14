@@ -6,10 +6,10 @@
         {{range $key, $trait := $model.Traits}}
             {{traitFieldName $trait}} {{typeFor $trait.Type}} {{traitFieldTags $trait}}
         {{end}}
-        {{range $key, $link := $model.Links}}
-            {{linkFieldName $link}} {{linkFieldType $link}} {{linkFieldTags $link}}
-            {{if isVirtual $model $link}}
-                {{virtualLinkExtraFields $link}}
+        {{range $key, $relation := $model.Relations}}
+            {{relationFieldName $relation}} {{relationFieldType $relation}} {{relationFieldTags $relation}}
+            {{if isVirtual $model $relation}}
+                {{virtualRelationExtraFields $relation}}
             {{end}}
         {{end}}
     }{
@@ -19,10 +19,10 @@
             {{traitFieldName $trait}}: {{this $model}}.{{traitFieldName $trait}},
             {{end}}
         {{end}}
-        {{range $key, $link := $model.Links}}
-            {{linkFieldName $link}}: {{this $model}}.{{linkFieldName $link}},
-            {{if isVirtual $model $link}}
-            {{name $link.Name}}Kind: {{this $model}}.{{name $link.Name}}Kind,
+        {{range $key, $relation := $model.Relations}}
+            {{relationFieldName $relation}}: {{this $model}}.{{relationFieldName $relation}},
+            {{if isVirtual $model $relation}}
+            {{name $relation.Name}}Kind: {{this $model}}.{{name $relation.Name}}Kind,
             {{end}}
         {{end}}
     }, nil
@@ -39,10 +39,10 @@
             {{traitFieldName $trait}} {{typeFor $trait.Type}} {{traitFieldTags $trait}}
             {{end}}
         {{end}}
-        {{range $key, $link := $model.Links}}
-            {{linkFieldName $link}} {{linkFieldType $link}} {{linkFieldTags $link}}
-            {{if isVirtual $model $link}}
-                {{virtualLinkExtraFields $link}}
+        {{range $key, $relation := $model.Relations}}
+            {{relationFieldName $relation}} {{relationFieldType $relation}} {{relationFieldTags $relation}}
+            {{if isVirtual $model $relation}}
+                {{virtualRelationExtraFields $relation}}
             {{end}}
         {{end}}
     }{}
@@ -57,10 +57,10 @@
             {{this $model}}.{{traitFieldName $trait}} = tmp.{{traitFieldName $trait}}
         {{end}}
     {{end}}
-    {{range $key, $link := $model.Links}}
-        {{this $model}}.{{linkFieldName $link}} = tmp.{{linkFieldName $link}}
-        {{if isVirtual $model $link}}
-        {{this $model}}.{{name $link.Name}}Kind = tmp.{{name $link.Name}}Kind
+    {{range $key, $relation := $model.Relations}}
+        {{this $model}}.{{relationFieldName $relation}} = tmp.{{relationFieldName $relation}}
+        {{if isVirtual $model $relation}}
+        {{this $model}}.{{name $relation.Name}}Kind = tmp.{{name $relation.Name}}Kind
         {{end}}
     {{end}}
     return nil

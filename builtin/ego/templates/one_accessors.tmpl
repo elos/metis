@@ -5,28 +5,28 @@
 {{end}}
 
 {{define "Setter"}}
-{{sig .Model}} Set{{name .This.Link.Name}}({{camel .Other.Kind}} {{.Other.Type}}) error {
-    {{this .Model}}.{{linkFieldName .This.Link}} = {{camel .Other.Kind}}.ID().String()
+{{sig .Model}} Set{{name .This.Relation.Name}}({{camel .Other.Kind}} {{.Other.Type}}) error {
+    {{this .Model}}.{{relationFieldName .This.Relation}} = {{camel .Other.Kind}}.ID().String()
     return nil
 }
 {{end}}
 
 {{define "Getter"}}
-{{sig .Model}} {{name .This.Link.Name}}(db data.DB) ({{.Other.Type}}, error) {
-    if {{this .Model}}.{{linkFieldName .This.Link}} == "" {
+{{sig .Model}} {{name .This.Relation.Name}}(db data.DB) ({{.Other.Type}}, error) {
+    if {{this .Model}}.{{relationFieldName .This.Relation}} == "" {
         return nil, ErrEmptyLink
     }
 
     {{if .Other.IsPhysical}}
         {{camel .Other.Kind}} := New{{name .Other.Kind}}()
-        pid, _ := mongo.ParseObjectID({{this .Model}}.{{linkFieldName .This.Link}})
+        pid, _ := mongo.ParseObjectID({{this .Model}}.{{relationFieldName .This.Relation}})
         {{camel .Other.Kind}}.SetID(data.ID(pid.Hex()))
         return {{camel .Other.Kind}}, db.PopulateByID({{camel .Other.Kind}})
     {{else}}
-        m := ModelFor(data.Kind({{this .Model}}.{{name .This.Link.Name}}Kind))
+        m := ModelFor(data.Kind({{this .Model}}.{{name .This.Relation.Name}}Kind))
         {{camel .Other.Kind}} := m.({{.Other.Type}})
 
-        pid, _ := mongo.ParseObjectID({{this .Model}}.{{linkFieldName .This.Link}})
+        pid, _ := mongo.ParseObjectID({{this .Model}}.{{relationFieldName .This.Relation}})
 
         {{camel .Other.Kind}}.SetID(data.ID(pid.Hex()))
         return {{camel .Other.Kind}}, db.PopulateByID({{camel .Other.Kind}})
@@ -36,13 +36,13 @@
 
 {{define "OrCreate"}}
 {{if .Other.IsPhysical}}
-{{sig .Model}} {{name .This.Link.Name}}OrCreate(db data.DB) ({{.Other.Type}}, error) {
-    {{camel .Other.Kind}}, err := {{this .Model}}.{{name .This.Link.Name}}(db)
+{{sig .Model}} {{name .This.Relation.Name}}OrCreate(db data.DB) ({{.Other.Type}}, error) {
+    {{camel .Other.Kind}}, err := {{this .Model}}.{{name .This.Relation.Name}}(db)
 
     if err == ErrEmptyLink {
         {{camel .Other.Kind}} := New{{name .Other.Kind}}()
         {{camel .Other.Kind}}.SetID(db.NewID())
-        if err := {{this .Model}}.Set{{name .This.Link.Name}}({{camel .Other.Kind}}); err != nil {
+        if err := {{this .Model}}.Set{{name .This.Relation.Name}}({{camel .Other.Kind}}); err != nil {
             return nil, err
         }
 

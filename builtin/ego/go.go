@@ -36,9 +36,9 @@ func traitFieldName(t *metis.Trait) string {
 	return f
 }
 
-func linkFieldName(l *metis.Relation) string {
-	f := strings.Title(metis.CamelCase(l.Name)) + "ID"
-	if metis.IsMul(l) {
+func relationFieldName(r *metis.Relation) string {
+	f := strings.Title(metis.CamelCase(r.Name)) + "ID"
+	if metis.IsMul(r) {
 		f += "s"
 	}
 	return f
@@ -54,10 +54,10 @@ func traitFieldTags(t *metis.Trait) string {
 	return tags
 }
 
-func linkFieldTags(l *metis.Relation) string {
-	tag := l.Name + "_id"
+func relationFieldTags(r *metis.Relation) string {
+	tag := r.Name + "_id"
 
-	if metis.IsMul(l) {
+	if metis.IsMul(r) {
 		tag += "s"
 	}
 
@@ -65,7 +65,7 @@ func linkFieldTags(l *metis.Relation) string {
 	return tags
 }
 
-func linkFieldType(l *metis.Relation) string {
+func relationFieldType(l *metis.Relation) string {
 	tipe := "string"
 	if metis.IsMul(l) {
 		tipe = "[]" + tipe
@@ -103,7 +103,7 @@ func typeDefinition(m *metis.Model) string {
 
 		l := m.Relations[keys[i]]
 
-		fmt.Fprintf(&buf, "%s %s %s\n", linkFieldName(l), linkFieldType(l), linkFieldTags(l))
+		fmt.Fprintf(&buf, "%s %s %s\n", relationFieldName(l), relationFieldType(l), relationFieldTags(l))
 
 		if !m.Schema.IsPhysical(l.Codomain) {
 			fmt.Fprintf(&buf, virtualRelationExtraFields(l))
@@ -197,9 +197,9 @@ var (
 		"initial":                    func(s string) string { return metis.Initials(s)[0] },
 		"sig":                        Signature,
 		"name":                       name,
-		"linkFieldName":              linkFieldName,
-		"linkFieldType":              linkFieldType,
-		"linkFieldTags":              linkFieldTags,
+		"relationFieldName":          relationFieldName,
+		"relationFieldType":          relationFieldType,
+		"relationFieldTags":          relationFieldTags,
 		"virtualRelationExtraFields": virtualRelationExtraFields,
 		"traitFieldName":             traitFieldName,
 		"traitFieldTags":             traitFieldTags,

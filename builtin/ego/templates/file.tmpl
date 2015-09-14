@@ -20,11 +20,11 @@
     {{traitAccessors .Model}}
 
     {{with $model := .Model}}
-        {{range $key, $link := $model.Links}}
-            {{if isMul $link}}
-                {{template "MulAccessors" mulLinkAccessorsVar $model $link}}
+        {{range $key, $relation := $model.Relations}}
+            {{if isMul $relation}}
+                {{template "MulAccessors" mulRelationAccessorsVar $model $relation}}
             {{else}}
-                {{template "OneAccessors" oneLinkAccessorsVar $model $link}}
+                {{template "OneAccessors" oneRelationAccessorsVar $model $relation}}
             {{end}}
         {{end}}
     {{end}}

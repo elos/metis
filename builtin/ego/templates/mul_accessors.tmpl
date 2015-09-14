@@ -6,41 +6,41 @@
 {{end}}
 
 {{define "Include"}}
-{{sig .Model}} Include{{name .This.Link.Singular}}({{camel .This.Link.Singular}} {{.Other.Type}}) {
-    {{camel .Model.Kind}}.{{linkFieldName .This.Link}} = append({{camel .Model.Kind}}.{{linkFieldName .This.Link}}, {{camel .This.Link.Singular}}.ID().String())
+{{sig .Model}} Include{{name .This.Relation.Singular}}({{camel .This.Relation.Singular}} {{.Other.Type}}) {
+    {{camel .Model.Kind}}.{{relationFieldName .This.Relation}} = append({{camel .Model.Kind}}.{{relationFieldName .This.Relation}}, {{camel .This.Relation.Singular}}.ID().String())
 }
 {{end}}
 
 {{define "Exclude"}}
-{{sig .Model}} Exclude{{name .This.Link.Singular}}({{camel .This.Link.Singular}} {{.Other.Type}}) {
+{{sig .Model}} Exclude{{name .This.Relation.Singular}}({{camel .This.Relation.Singular}} {{.Other.Type}}) {
     tmp := make([]string, 0)
-    id := {{camel .This.Link.Singular}}.ID().String()
-    for _, s := range {{camel .Model.Kind}}.{{linkFieldName .This.Link}} {
+    id := {{camel .This.Relation.Singular}}.ID().String()
+    for _, s := range {{camel .Model.Kind}}.{{relationFieldName .This.Relation}} {
         if s != id {
             tmp = append(tmp, s)
         }
     }
-    {{camel .Model.Kind}}.{{linkFieldName .This.Link}} = tmp
+    {{camel .Model.Kind}}.{{relationFieldName .This.Relation}} = tmp
 }
 {{end}}
 
 {{define "Iter"}}
-{{sig .Model}} {{name .This.Link.Name}}Iter(db data.DB) (data.Iterator, error) {
+{{sig .Model}} {{name .This.Relation.Name}}Iter(db data.DB) (data.Iterator, error) {
     // not yet completely general
-    return mongo.NewIDIter(mongo.NewIDSetFromStrings({{camel .Model.Kind}}.{{linkFieldName .This.Link}}), db), nil
+    return mongo.NewIDIter(mongo.NewIDSetFromStrings({{camel .Model.Kind}}.{{relationFieldName .This.Relation}}), db), nil
 }
 {{end}}
 
 {{define "List"}}
-{{sig .Model}} {{name .This.Link.Name}}(db data.DB) ([]{{.Other.Type}}, error) {
+{{sig .Model}} {{name .This.Relation.Name}}(db data.DB) ([]{{.Other.Type}}, error) {
 
-    {{.This.Link.Name}} := make([]{{.Other.Type}}, 0)
-    iter := mongo.NewIDIter(mongo.NewIDSetFromStrings({{camel .Model.Kind}}.{{linkFieldName .This.Link}}), db)
-    {{.This.Link.Singular}} := New{{name .Other.Kind}}()
-    for iter.Next({{.This.Link.Singular}}) {
-        {{.This.Link.Name}} = append({{.This.Link.Name}}, {{.This.Link.Singular}})
-        {{.This.Link.Singular}} = New{{name .Other.Kind}}()
+    {{.This.Relation.Name}} := make([]{{.Other.Type}}, 0)
+    iter := mongo.NewIDIter(mongo.NewIDSetFromStrings({{camel .Model.Kind}}.{{relationFieldName .This.Relation}}), db)
+    {{.This.Relation.Singular}} := New{{name .Other.Kind}}()
+    for iter.Next({{.This.Relation.Singular}}) {
+        {{.This.Relation.Name}} = append({{.This.Relation.Name}}, {{.This.Relation.Singular}})
+        {{.This.Relation.Singular}} = New{{name .Other.Kind}}()
     }
-    return {{.This.Link.Name}}, nil
+    return {{.This.Relation.Name}}, nil
 }
 {{end}}
