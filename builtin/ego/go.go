@@ -36,7 +36,7 @@ func traitFieldName(t *metis.Trait) string {
 	return f
 }
 
-func linkFieldName(l *metis.Link) string {
+func linkFieldName(l *metis.Relation) string {
 	f := strings.Title(metis.CamelCase(l.Name)) + "ID"
 	if metis.IsMul(l) {
 		f += "s"
@@ -54,7 +54,7 @@ func traitFieldTags(t *metis.Trait) string {
 	return tags
 }
 
-func linkFieldTags(l *metis.Link) string {
+func linkFieldTags(l *metis.Relation) string {
 	tag := l.Name + "_id"
 
 	if metis.IsMul(l) {
@@ -65,7 +65,7 @@ func linkFieldTags(l *metis.Link) string {
 	return tags
 }
 
-func linkFieldType(l *metis.Link) string {
+func linkFieldType(l *metis.Relation) string {
 	tipe := "string"
 	if metis.IsMul(l) {
 		tipe = "[]" + tipe
@@ -73,7 +73,7 @@ func linkFieldType(l *metis.Link) string {
 	return tipe
 }
 
-func virtualLinkExtraFields(l *metis.Link) string {
+func virtualRelationExtraFields(l *metis.Relation) string {
 	field := strings.Title(metis.CamelCase(l.Name)) + "Kind"
 	tag := l.Name + "_kind"
 	tags := fmt.Sprintf("`json:\"%s\" bson:\"%s\"`", tag, tag)
@@ -89,7 +89,7 @@ func typeDefinition(m *metis.Model) string {
 	for k := range m.Traits {
 		keys = append(keys, k)
 	}
-	for k := range m.Links {
+	for k := range m.Relations {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
@@ -101,12 +101,12 @@ func typeDefinition(m *metis.Model) string {
 			continue
 		}
 
-		l := m.Links[keys[i]]
+		l := m.Relations[keys[i]]
 
 		fmt.Fprintf(&buf, "%s %s %s\n", linkFieldName(l), linkFieldType(l), linkFieldTags(l))
 
 		if !m.Schema.IsPhysical(l.Codomain) {
-			fmt.Fprintf(&buf, virtualLinkExtraFields(l))
+			fmt.Fprintf(&buf, virtualRelationExtraFields(l))
 		}
 	}
 
@@ -123,7 +123,7 @@ func traitAccessors(m *metis.Model) string {
 type accessVar struct {
 	Model *metis.Model
 	This  struct {
-		Link *metis.Link
+		Relation *metis.Relation
 	}
 	Other struct {
 		Type, Kind string
@@ -131,7 +131,7 @@ type accessVar struct {
 	}
 }
 
-func oneLinkAccessorsVar(m *metis.Model, l *metis.Link) *accessVar {
+func oneRelationAccessorsVar(m *metis.Model, l *metis.Relation) *accessVar {
 	var oKind, oType string
 	s := m.Schema
 	if s.IsPhysical(l.Codomain) {
@@ -144,7 +144,7 @@ func oneLinkAccessorsVar(m *metis.Model, l *metis.Link) *accessVar {
 
 	return &accessVar{
 		m,
-		struct{ Link *metis.Link }{Link: l},
+		struct{ Relation *metis.Relation }{Relation: l},
 		struct {
 			Type       string
 			Kind       string
@@ -153,7 +153,7 @@ func oneLinkAccessorsVar(m *metis.Model, l *metis.Link) *accessVar {
 	}
 }
 
-func mulLinkAccessorsVar(m *metis.Model, l *metis.Link) *accessVar {
+func mulRelationAccessorsVar(m *metis.Model, l *metis.Relation) *accessVar {
 	var oKind, oType string
 	s := m.Schema
 	if s.IsPhysical(l.Codomain) {
@@ -165,7 +165,7 @@ func mulLinkAccessorsVar(m *metis.Model, l *metis.Link) *accessVar {
 	}
 	return &accessVar{
 		m,
-		struct{ Link *metis.Link }{Link: l},
+		struct{ Relation *metis.Relation }{Relation: l},
 		struct {
 			Type       string
 			Kind       string
@@ -186,23 +186,23 @@ var (
 		"dict":    templates.Dict,
 		"isMul":   metis.IsMul,
 		"isID":    metis.IsID,
-		"isVirtual": func(m *metis.Model, l *metis.Link) bool {
+		"isVirtual": func(m *metis.Model, l *metis.Relation) bool {
 			return !m.Schema.IsPhysical(l.Codomain)
 		},
-		"firstLetter":            func(s string) string { return metis.Initials(s)[0] },
-		"typeDefinition":         typeDefinition,
-		"traitAccessors":         traitAccessors,
-		"oneLinkAccessorsVar":    oneLinkAccessorsVar,
-		"mulLinkAccessorsVar":    mulLinkAccessorsVar,
-		"initial":                func(s string) string { return metis.Initials(s)[0] },
-		"sig":                    Signature,
-		"name":                   name,
-		"linkFieldName":          linkFieldName,
-		"linkFieldType":          linkFieldType,
-		"linkFieldTags":          linkFieldTags,
-		"virtualLinkExtraFields": virtualLinkExtraFields,
-		"traitFieldName":         traitFieldName,
-		"traitFieldTags":         traitFieldTags,
+		"firstLetter":                func(s string) string { return metis.Initials(s)[0] },
+		"typeDefinition":             typeDefinition,
+		"traitAccessors":             traitAccessors,
+		"oneRelationAccessorsVar":    oneRelationAccessorsVar,
+		"mulRelationAccessorsVar":    mulRelationAccessorsVar,
+		"initial":                    func(s string) string { return metis.Initials(s)[0] },
+		"sig":                        Signature,
+		"name":                       name,
+		"linkFieldName":              linkFieldName,
+		"linkFieldType":              linkFieldType,
+		"linkFieldTags":              linkFieldTags,
+		"virtualRelationExtraFields": virtualRelationExtraFields,
+		"traitFieldName":             traitFieldName,
+		"traitFieldTags":             traitFieldTags,
 		"this": func(m *metis.Model) string {
 			return metis.CamelCase(m.Kind)
 		},
