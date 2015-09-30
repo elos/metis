@@ -3,14 +3,14 @@ package metis
 // Here we define types for the metis logical core.
 
 type (
-	// A trait has a name, which you use to refer to the attribute and a
+	// A Trait has a name, which you use to refer to the attribute and a
 	// metis primitive type (e.g. string, int, boolean)
 	Trait struct {
 		Name string
 		Type Primitive
 	}
 
-	// A link has a name, a multiplicity (one or mul), a singular form
+	// A Link has a name, a multiplicity (one or mul), a singular form
 	// (iff multiplicity == mul), a codomain (the space of models which can be
 	// assigned to this link), and an inverse (the name of the corresponding
 	// model's link to this model).
@@ -22,7 +22,7 @@ type (
 		Inverse      string
 	}
 
-	// A model has a kind (it's name), a space (it's plural - but also
+	// A Model has a kind (it's name), a space (it's plural - but also
 	// its physical domain), domains (the physcial and abstract spaces
 	// this model implements), and a list of traits and a list of links.
 	Model struct {
@@ -34,7 +34,7 @@ type (
 		*Schema
 	}
 
-	// A schema has a list of models, a list of spaces and a list of domains.
+	// A Schema has a list of models, a list of spaces and a list of domains.
 	// Plus a version. A virtual domain can be thought of as an interface and
 	// is any domain referenced in a model that has no physical space counterpart.
 	Schema struct {
