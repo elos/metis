@@ -1,7 +1,7 @@
 To install the `metis` command, run:
 
 ```bash
-    go install metis.go.
+    go install metis.go
 ```
 
 Then you should be able to run:
