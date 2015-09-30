@@ -74,6 +74,9 @@ const (
 type Multiplicity int
 
 const (
-	Mul Multiplicity = iota // has_many
-	One                     // belongs_to (because the id is on the struct)
+	// Mul represents a multiple relation, can be thought of as 'has_many'
+	Mul Multiplicity = iota
+
+	// One represents a single relation, can be thought of as 'belongs_to' (because id is on the struct)
+	One
 )
