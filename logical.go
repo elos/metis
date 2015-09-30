@@ -10,10 +10,10 @@ type (
 		Type Primitive
 	}
 
-	// A Link has a name, a multiplicity (one or mul), a singular form
+	// A Relation has a name, a multiplicity (one or mul), a singular form
 	// (iff multiplicity == mul), a codomain (the space of models which can be
-	// assigned to this link), and an inverse (the name of the corresponding
-	// model's link to this model).
+	// assigned to this relation), and an inverse (the name of the corresponding
+	// model's relation to this model).
 	Relation struct {
 		Name         string
 		Multiplicity Multiplicity
@@ -24,7 +24,7 @@ type (
 
 	// A Model has a kind (it's name), a space (it's plural - but also
 	// its physical domain), domains (the physcial and abstract spaces
-	// this model implements), and a list of traits and a list of links.
+	// this model implements), and a list of traits and a list of relations.
 	Model struct {
 		Kind      string
 		Space     string
@@ -70,7 +70,7 @@ const (
 	IntegerIDMap // map[integer]id
 )
 
-// Multiplicity represents the size of a link
+// Multiplicity represents the size of a Relation
 type Multiplicity int
 
 const (
