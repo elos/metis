@@ -5,8 +5,8 @@
 {{end}}
 
 {{define "Setter"}}
-{{sig .Model}} Set{{name .This.Relation.Name}}({{camel .Other.Kind}} {{.Other.Type}}) error {
-    {{this .Model}}.{{relationFieldName .This.Relation}} = {{camel .Other.Kind}}.ID().String()
+{{sig .Model}} Set{{name .This.Relation.Name}}({{camel .Other.Kind}}Argument {{.Other.Type}}) error {
+    {{this .Model}}.{{relationFieldName .This.Relation}} = {{camel .Other.Kind}}Argument.ID().String()
     return nil
 }
 {{end}}
@@ -18,10 +18,10 @@
     }
 
     {{if .Other.IsPhysical}}
-        {{camel .Other.Kind}} := New{{name .Other.Kind}}()
+        {{camel .Other.Kind}}Argument := New{{name .Other.Kind}}()
         pid, _ := mongo.ParseObjectID({{this .Model}}.{{relationFieldName .This.Relation}})
-        {{camel .Other.Kind}}.SetID(data.ID(pid.Hex()))
-        return {{camel .Other.Kind}}, db.PopulateByID({{camel .Other.Kind}})
+        {{camel .Other.Kind}}Argument.SetID(data.ID(pid.Hex()))
+        return {{camel .Other.Kind}}Argument, db.PopulateByID({{camel .Other.Kind}}Argument)
     {{else}}
         m := ModelFor(data.Kind({{this .Model}}.{{name .This.Relation.Name}}Kind))
         {{camel .Other.Kind}} := m.({{.Other.Type}})

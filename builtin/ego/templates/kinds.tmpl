@@ -5,4 +5,10 @@
         {{name $model.Kind}}Kind data.Kind = "{{$model.Kind}}"
     {{end}}
     )
+
+    var Kinds = map[data.Kind]bool{
+    {{range $key, $model := .Models }}
+        {{name $model.Kind}}Kind: true,
+    {{end}}
+    }
 {{end}}
