@@ -31,6 +31,25 @@
 
     {{template "BSON" $}}
 
+    {{with $model := .Model}}
+    {{sig $model}} FromStructure(structure map[string]interface{}) {
+        {{range $trait := structure $model}}
+            {{with $field := traitFieldName $trait }}
+                if val, ok := structure["{{$trait.Name}}"]; ok {
+                {{camel $model.Kind}}.{{$field}} = val.({{typeFor $trait.Type}})
+                }
+            {{end}}
+        {{end}}
+    }
+
+    var {{name $model.Kind}}Structure = map[string]metis.Primitive{
+        {{range $trait := structure $model}}
+            "{{$trait.Name}}": {{$trait.Type}},
+        {{end}}
+    }
+
+    {{end}}
+
 {{end}}
 
 {{define "Constructor"}}

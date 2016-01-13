@@ -206,6 +206,7 @@ var (
 		"this": func(m *metis.Model) string {
 			return metis.CamelCase(m.Kind)
 		},
+		"structure": metis.Structure,
 	}
 
 	File         templates.Name = 0
