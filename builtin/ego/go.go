@@ -37,7 +37,7 @@ func traitFieldName(t *metis.Trait) string {
 }
 
 func relationFieldName(r *metis.Relation) string {
-	f := strings.Title(metis.CamelCase(r.Name)) + "ID"
+	f := strings.Title(metis.CamelCase(r.Name)) + "Id"
 	if metis.IsMul(r) {
 		f += "s"
 	}
@@ -206,6 +206,7 @@ var (
 		"this": func(m *metis.Model) string {
 			return metis.CamelCase(m.Kind)
 		},
+		"structure": metis.Structure,
 	}
 
 	File         templates.Name = 0
