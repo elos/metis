@@ -19,12 +19,12 @@ func attributesTable(m *metis.Model) string {
 		fmt.Fprintf(&buf, "| %s | %s | %s |\n", n, t.Name, metis.InvPrimitiveLiterals[t.Type])
 	}
 
-	for _, l := range m.Links {
-		n := strings.Title(metis.CamelCase(l.Name))
-		json := l.Name + "_id"
+	for _, r := range m.Relations {
+		n := strings.Title(metis.CamelCase(r.Name))
+		json := r.Name + "_id"
 		t := "id"
 
-		if metis.IsMul(l) {
+		if metis.IsMul(r) {
 			n += "s"
 			json += "s"
 			t = "[]" + t
