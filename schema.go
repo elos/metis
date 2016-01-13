@@ -7,7 +7,6 @@ import "fmt"
 // and it's verification are two separate steps. Any set of models can be composed into a schema
 // but that does not necessarily make them a valid schema. To compose models, use BuildSchema, to
 // verify the schema use Valid()
-
 func (s *Schema) IsPhysical(space string) bool {
 	_, ok := s.Spaces[space]
 	return ok
