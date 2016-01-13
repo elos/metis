@@ -1,0 +1,17 @@
+{{define "ROOT"}}
+    {{template "File" $}}
+{{end}}
+
+{{define "File"}}
+    part of sky.models;
+
+    const {{name .Kind}}Kind = "{{.Kind}}";
+    const {{name .Kind}}Space = "{{.Space}}";
+    {{name .Kind}} New{{name .Kind}}(Map<String, dynamic> s) => new {{name .Kind}}.fromStructure(s);
+
+    class {{name .Kind}} extends Property {
+        {{name .Kind}}.fromStructure(Map<String, dynamic> s) {
+            super.loadStructure(s);
+        }
+    }
+{{end}}

@@ -7,7 +7,13 @@
 
 {{define "Include"}}
 {{sig .Model}} Include{{name .This.Relation.Singular}}({{camel .This.Relation.Singular}} {{.Other.Type}}) {
-    {{camel .Model.Kind}}.{{relationFieldName .This.Relation}} = append({{camel .Model.Kind}}.{{relationFieldName .This.Relation}}, {{camel .This.Relation.Singular}}.ID().String())
+    otherID := {{camel .This.Relation.Singular}}.ID().String()
+    for i := range {{camel .Model.Kind}}.{{relationFieldName .This.Relation}} {
+        if {{camel .Model.Kind}}.{{relationFieldName .This.Relation}}[i] == otherID {
+            return
+        }
+    }
+    {{camel .Model.Kind}}.{{relationFieldName .This.Relation}} = append({{camel .Model.Kind}}.{{relationFieldName .This.Relation}}, otherID)
 }
 {{end}}
 
@@ -32,15 +38,19 @@
 {{end}}
 
 {{define "List"}}
-{{sig .Model}} {{name .This.Relation.Name}}(db data.DB) ([]{{.Other.Type}}, error) {
-
-    {{.This.Relation.Name}} := make([]{{.Other.Type}}, 0)
-    iter := mongo.NewIDIter(mongo.NewIDSetFromStrings({{camel .Model.Kind}}.{{relationFieldName .This.Relation}}), db)
+{{sig .Model}} {{name .This.Relation.Name}}(db data.DB) ({{.This.Relation.Name}} []{{.Other.Type}}, err error) {
+    {{.This.Relation.Name}} = make([]{{.Other.Type}}, len({{camel .Model.Kind}}.{{relationFieldName .This.Relation}}))
     {{.This.Relation.Singular}} := New{{name .Other.Kind}}()
-    for iter.Next({{.This.Relation.Singular}}) {
-        {{.This.Relation.Name}} = append({{.This.Relation.Name}}, {{.This.Relation.Singular}})
+    for i, id := range {{camel .Model.Kind}}.{{relationFieldName .This.Relation}} {
+        {{.This.Relation.Singular}}.Id = id
+        if err = db.PopulateByID({{.This.Relation.Singular}}); err != nil {
+            return
+        }
+
+        {{.This.Relation.Name}}[i] = {{.This.Relation.Singular}}
         {{.This.Relation.Singular}} = New{{name .Other.Kind}}()
     }
-    return {{.This.Relation.Name}}, nil
+
+    return
 }
 {{end}}
