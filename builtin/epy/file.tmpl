@@ -1,0 +1,45 @@
+{{define "ROOT"}}
+    {{template "File" $}}
+{{end}}
+
+{{define "File"}}
+{{with $schema := .}}
+import dateutil.parser
+from db import Record
+
+{{range $key, $model := .Models}}
+{{name $model.Kind}}Kind = "{{$model.Kind}}" {{end}}
+
+{{range $key, $model := .Models}}
+class {{name $model.Kind}}(Record):
+    """ {{range $key, $trait := $model.Traits}}
+    {{$trait.Name}} {{type $trait}} {{end}} {{range $key, $relation := $model.Relations}}
+    {{$relation.Name}} {{type $relation}} {{end}}
+    """
+
+    {{range $key, $relation := $model.Relations}}
+    {{with $otherKind := kindFor $schema $relation}}
+    def {{$relation.Name}}(self, db): {{if isMul $relation}}
+        [db.get({{name $otherKind}}, id) for id in self.{{field $relation}}]
+    {{else}}
+        return db.get({{name $otherKind}}, self.{{field $relation}})
+    {{end}} {{end}} {{end}}
+
+    @staticmethod
+    def Kind():
+        return {{name $model.Kind}}Kind
+
+    @staticmethod
+    def unmarshal(json):
+        self = {{name $model.Kind}}()
+
+        # Traits {{range $key, $trait := $model.Traits}}
+        self.{{field $trait}} = {{unpack $trait "json"}} {{end}}
+
+        # Relations {{range $key, $relation := $model.Relations}}
+        self.{{field $relation}} = json["{{field $relation}}"] {{end}}
+
+        return self
+{{end}}
+{{end}}
+{{end}}
