@@ -25,8 +25,25 @@ var PrimitiveTypes = map[metis.Primitive]string{
 	metis.DateTimeList: "[]Datetime",
 	metis.ID:           "str",
 	metis.IDList:       "[]str",
-	metis.StringIDMap:  "map[str]str",
-	metis.IntegerIDMap: "map[int]str",
+	metis.StringIDMap:  "dict",
+	metis.IntegerIDMap: "dict",
+	metis.JSON:         "dict",
+}
+
+func field(v interface{}) string {
+	switch v.(type) {
+	case *metis.Trait:
+		return v.(*metis.Trait).Name
+	case *metis.Relation:
+		r := v.(*metis.Relation)
+		if metis.IsMul(r) {
+			return r.Name + "_ids"
+		} else {
+			return r.Name + "_id"
+		}
+	default:
+		panic("field not passed *Trait or *Relation")
+	}
 }
 
 var (
@@ -37,21 +54,7 @@ var (
 		"name": func(s string) string {
 			return strings.Title(metis.CamelCase(s))
 		},
-		"field": func(v interface{}) string {
-			switch v.(type) {
-			case *metis.Trait:
-				return v.(*metis.Trait).Name
-			case *metis.Relation:
-				r := v.(*metis.Relation)
-				if metis.IsMul(r) {
-					return r.Name + "_ids"
-				} else {
-					return r.Name + "_id"
-				}
-			default:
-				panic("field not passed *Trait or *Relation")
-			}
-		},
+		"field": field,
 		"type": func(v interface{}) string {
 			switch v.(type) {
 			case *metis.Trait:
@@ -80,6 +83,15 @@ var (
 		"isMul": metis.IsMul,
 		"kindFor": func(s *metis.Schema, r *metis.Relation) string {
 			return s.Spaces[r.Codomain]
+		},
+		"repack": func(t *metis.Trait) string {
+			switch t.Type {
+			case metis.DateTime:
+				return fmt.Sprintf("self.%s.isoformat()", field(t))
+			case metis.DateTimeList:
+				return fmt.Sprintf("[d.isoformat() for d in self.%s]", field(t))
+			}
+			return fmt.Sprintf("self.%s", field(t))
 		},
 	}
 

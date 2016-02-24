@@ -19,16 +19,16 @@
 
     {{if .Other.IsPhysical}}
         {{camel .Other.Kind}}Argument := New{{name .Other.Kind}}()
-        pid, _ := mongo.ParseObjectID({{this .Model}}.{{relationFieldName .This.Relation}})
-        {{camel .Other.Kind}}Argument.SetID(data.ID(pid.Hex()))
+        id, _ := db.ParseID({{this .Model}}.{{relationFieldName .This.Relation}})
+        {{camel .Other.Kind}}Argument.SetID(id)
         return {{camel .Other.Kind}}Argument, db.PopulateByID({{camel .Other.Kind}}Argument)
     {{else}}
         m := ModelFor(data.Kind({{this .Model}}.{{name .This.Relation.Name}}Kind))
         {{camel .Other.Kind}} := m.({{.Other.Type}})
 
-        pid, _ := mongo.ParseObjectID({{this .Model}}.{{relationFieldName .This.Relation}})
+        id, _ := db.ParseID({{this .Model}}.{{relationFieldName .This.Relation}})
 
-        {{camel .Other.Kind}}.SetID(data.ID(pid.Hex()))
+        {{camel .Other.Kind}}.SetID(id)
         return {{camel .Other.Kind}}, db.PopulateByID({{camel .Other.Kind}})
     {{end}}
 }

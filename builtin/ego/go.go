@@ -28,11 +28,6 @@ func initial(s string) string {
 
 func traitFieldName(t *metis.Trait) string {
 	f := strings.Title(metis.CamelCase(t.Name))
-	/* for compatibility with the ID() interface
-	if metis.IsID(t) {
-		f = strings.ToUpper(f)
-	}
-	*/
 	return f
 }
 

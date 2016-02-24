@@ -5,7 +5,7 @@
 {{define "File"}}
 {{with $schema := .}}
 import dateutil.parser
-from db import Record
+from elos.db import Record
 
 {{range $key, $model := .Models}}
 {{name $model.Kind}}Kind = "{{$model.Kind}}" {{end}}
@@ -22,8 +22,23 @@ class {{name $model.Kind}}(Record):
     def {{$relation.Name}}(self, db): {{if isMul $relation}}
         [db.get({{name $otherKind}}, id) for id in self.{{field $relation}}]
     {{else}}
-        return db.get({{name $otherKind}}, self.{{field $relation}})
+        if self.{{field $relation}} != None:
+            return db.get({{name $otherKind}}, self.{{field $relation}})
+        else:
+            return None
     {{end}} {{end}} {{end}}
+
+    def marshal(self):
+        json = {}
+
+        # Traits {{range $key, $trait := $model.Traits}}
+        json["{{field $trait}}"] = {{repack $trait}} {{end}}
+
+        # Relations {{range $key, $relation := $model.Relations}}
+        json["{{field $relation}}"] = self.{{field $relation}} {{end}}
+
+        return json
+
 
     @staticmethod
     def Kind():
