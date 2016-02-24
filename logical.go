@@ -68,6 +68,8 @@ const (
 
 	StringIDMap  // map[string]id
 	IntegerIDMap // map[integer]id
+
+	JSON // map[string]interface{}
 )
 
 // Multiplicity represents the size of a Relation

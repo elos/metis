@@ -15,6 +15,7 @@ var primitiveLiterals = map[string]Primitive{
 	"[]id":           IDList,
 	"map[string]id":  StringIDMap,
 	"map[integer]id": IntegerIDMap,
+	"json":           JSON,
 }
 
 var InvPrimitiveLiterals = map[Primitive]string{
@@ -31,6 +32,7 @@ var InvPrimitiveLiterals = map[Primitive]string{
 	IDList:       "[]id",
 	StringIDMap:  "map[string]id",
 	IntegerIDMap: "map[integer]id",
+	JSON:         "json",
 }
 
 var multiplicityLiterals = map[string]Multiplicity{
