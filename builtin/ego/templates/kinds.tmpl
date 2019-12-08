@@ -11,4 +11,10 @@
         {{name $model.Kind}}Kind: true,
     {{end}}
     }
+
+    var Metis = map[data.Kind]*metis.Model{
+    {{range $key, $model := .Models }}
+        {{name $model.Kind}}Kind: {{ $model | printf "%#+v" }},
+    {{end}}
+    }
 {{end}}

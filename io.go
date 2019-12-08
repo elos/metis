@@ -71,3 +71,30 @@ func ParseModelFile(filepath string) (*Model, error) {
 
 	return md.Model(), nil
 }
+
+func (m *Model) GoString() string {
+	return fmt.Sprintf(`&metis.Model{
+		Kind: %q,
+		Space: %q,
+		Domains: %#v,
+		Traits: %#v,
+		Relations: %#v,
+	}`, m.Kind, m.Space, m.Domains, m.Traits, m.Relations)
+}
+
+func (t *Trait) GoString() string {
+	return fmt.Sprintf(`&metis.Trait{
+		Name: %q,
+		Type: metis.Primitive(%d),
+	}`, t.Name, t.Type)
+}
+
+func (r *Relation) GoString() string {
+	return fmt.Sprintf(`&metis.Relation{
+		Name: %q,
+		Multiplicity: metis.Multiplicity(%d),
+		Singular: %q,
+		Codomain: %q,
+		Inverse: %q,
+	}`, r.Name, r.Multiplicity, r.Singular, r.Codomain, r.Inverse)
+}
